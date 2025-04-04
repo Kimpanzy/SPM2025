@@ -72,3 +72,14 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Ignore colab scenes
+LucasSivars.umap
+KimPersson.umap
+HayderHamade.umap
+LinusGyllenberg.umap
+HermanJohansson.umap
+MalteMolin.umap
+MelvinEriksson.umap
+VincentBlossborn.umap
+FurkanBasa.umap
