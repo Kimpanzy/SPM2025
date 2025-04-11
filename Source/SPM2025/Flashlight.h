@@ -20,20 +20,21 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* Root;
+	UPROPERTY(VisibleAnywhere,Category="Mesh")
+	UStaticMeshComponent* Mesh;
+	UPROPERTY(VisibleAnywhere,Category="Light")
+	USpotLightComponent* OuterSpotLight;
+	UPROPERTY(VisibleAnywhere,Category="Light")
+	USpotLightComponent* InnerSpotLight;
+	UPROPERTY(VisibleAnywhere)
+	float Battery = 100.0f;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	void ToggleFlashlight();
 
-	UPROPERTY(VisibleAnywhere)
-	USceneComponent* Root;
-	
-	UPROPERTY(VisibleAnywhere)
-	USpotLightComponent* OuterSpotLight;
-	UPROPERTY(VisibleAnywhere)
-	USpotLightComponent* InnerSpotLight;
-	UPROPERTY(VisibleAnywhere)
-	float Battery = 100.0f;
 
 	UPROPERTY(EditAnywhere)
 	bool bIsOn;
