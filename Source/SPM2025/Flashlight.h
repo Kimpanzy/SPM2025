@@ -30,9 +30,12 @@ public:
 	
 	UPROPERTY(VisibleAnywhere)
 	USpotLightComponent* OuterSpotLight;
-	USpotLightComponent* InnerSpotLight;
-
 	UPROPERTY(VisibleAnywhere)
+	USpotLightComponent* InnerSpotLight;
+	UPROPERTY(VisibleAnywhere)
+	float Battery = 100.0f;
+
+	UPROPERTY(EditAnywhere)
 	bool bIsOn;
 
 };

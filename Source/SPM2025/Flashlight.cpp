@@ -21,7 +21,7 @@ AFlashlight::AFlashlight()
 	OuterSpotLight->SetOuterConeAngle(30.0f);
 
 	InnerSpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("InnerSpotLight"));
-	InnerSpotLight->SetupAttachment(Root);
+	InnerSpotLight->SetupAttachment(OuterSpotLight);
 	InnerSpotLight->SetIntensity(750.0f);
 	InnerSpotLight->SetAttenuationRadius(500.0f);
 	InnerSpotLight->SetOuterConeAngle(10.0f);
@@ -48,6 +48,6 @@ void AFlashlight::BeginPlay()
 void AFlashlight::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	ToggleFlashlight();
 }
 
