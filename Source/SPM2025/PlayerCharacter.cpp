@@ -42,21 +42,14 @@ void APlayerCharacter::BeginPlay()
 			SubSystem->AddMappingContext(PlayerInputContext, 0);
 		}
 	}
+	//Spawn flashlight
 	Flashlight = GetWorld()->SpawnActor<AFlashlight>(AFlashlight::StaticClass());
-
+	//Attach flashlight till kameran
 	if (Flashlight)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Flashlight spawned successfully!"));
-
-		// Attach to the camera
 		Flashlight->AttachToComponent(CameraComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		Flashlight->SetActorRelativeLocation(FVector(30.0f, 0.0f, 10.0f));
 	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to spawn flashlight!"));
-	}
-	
 }
 
 // Called every frame
@@ -74,12 +67,41 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(FlashlightAction,ETriggerEvent::Started, this, &APlayerCharacter::ToggleFlashlight);
+		EnhancedInputComponent->BindAction(JumpAction,ETriggerEvent::Triggered, this, &APlayerCharacter::InputJump);
+		EnhancedInputComponent->BindAction(MovementAction,ETriggerEvent::Triggered, this, &APlayerCharacter::InputMove);
+		EnhancedInputComponent->BindAction(LookAction,ETriggerEvent::Triggered, this, &APlayerCharacter::InputLook);
+		
 	}
+}
+void APlayerCharacter::InputMove(const FInputActionValue& Value)
+{
+	const FVector2D MovementVector = Value.Get<FVector2D>();
 
+	const FRotator Rotation = GetController()->GetControlRotation();
+	const FRotator YawRotation(0.f,Rotation.Yaw, 0.f);
 
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	AddMovementInput(ForwardDirection, MovementVector.Y);
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	AddMovementInput(RightDirection,MovementVector.X);
+}
+void APlayerCharacter::InputJump(const FInputActionValue& Value)
+{
+	Jump();
+}
+void InputSprint(const FInputActionValue& Value)
+{
 	
-	//InputComponent->BindAction("ToggleFlashlight", IE_Pressed, this, &APlayerCharacter::ToggleFlashlight());
-
+}
+void APlayerCharacter::InputLook(const FInputActionValue& Value)
+{
+	const FVector2D LookAxisValue = Value.Get<FVector2D>();
+	if (GetController())
+	{
+		AddControllerYawInput(LookAxisValue.X);
+		AddControllerPitchInput(LookAxisValue.Y);
+	}
+	
 }
 
 void APlayerCharacter::ToggleFlashlight(const FInputActionValue& Value)

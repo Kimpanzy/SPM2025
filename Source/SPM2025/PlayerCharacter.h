@@ -22,14 +22,29 @@ public:
 	APlayerCharacter();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = Input)
+
+	//-->Input actions<--
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Enhanced Input")
 	UInputMappingContext*  PlayerInputContext;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = Input)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Enhanced Input")
 	UInputAction* FlashlightAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Enhanced Input")
+	UInputAction* MovementAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Enhanced Input")
+	UInputAction* JumpAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Enhanced Input")
+	UInputAction* LookAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Enhanced Input")
+	UInputAction* SprintAction;
+	
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* CameraComponent;
+
+	void InputMove(const FInputActionValue& Value);
+	void InputJump(const FInputActionValue& Value);
+	void InputLook(const FInputActionValue& Value);
+	void InputSprint(const FInputActionValue& Value);
 
 public:	
 	// Called every frame
