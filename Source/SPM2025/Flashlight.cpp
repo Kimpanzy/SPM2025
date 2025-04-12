@@ -19,14 +19,10 @@ AFlashlight::AFlashlight()
 
 	OuterSpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("OuterSpotLight"));
 	OuterSpotLight->SetupAttachment(RootComponent);
-	OuterSpotLight->SetIntensity(500.0f);
-	OuterSpotLight->SetAttenuationRadius(500.0f);
 	OuterSpotLight->SetOuterConeAngle(30.0f);
 
 	InnerSpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("InnerSpotLight"));
 	InnerSpotLight->SetupAttachment(RootComponent);
-	InnerSpotLight->SetIntensity(750.0f);
-	InnerSpotLight->SetAttenuationRadius(500.0f);
 	InnerSpotLight->SetOuterConeAngle(10.0f);
 
 	bIsOn = false;
