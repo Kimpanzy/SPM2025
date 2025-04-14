@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "PlayerCharacter.generated.h"
 
+class USpringArmComponent;
 class UInputAction;
 class UInputMappingContext;
 class AFlashlight;
@@ -40,6 +41,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* CameraComponent;
+	UPROPERTY(EditAnywhere)
+	USpringArmComponent* SpringArm;
 
 	void InputMove(const FInputActionValue& Value);
 	void InputJump(const FInputActionValue& Value);
