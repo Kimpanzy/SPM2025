@@ -43,7 +43,7 @@ void APlayerCharacter::BeginPlay()
 		}
 	}
 	//Spawn flashlight
-	Flashlight = GetWorld()->SpawnActor<AFlashlight>(AFlashlight::StaticClass());
+	Flashlight = GetWorld()->SpawnActor<AFlashlight>(FlashlightClass);
 	//Attach flashlight till kameran
 	if (Flashlight)
 	{

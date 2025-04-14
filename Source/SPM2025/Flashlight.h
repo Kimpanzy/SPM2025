@@ -33,10 +33,17 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	UFUNCTION(BlueprintCallable)
 	void ToggleFlashlight();
 
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadWrite)
 	bool bIsOn;
+	
+	UFUNCTION(BlueprintCallable)
+	void FlickerLight(bool OnOrOff);
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void Flicker();
 
 };
