@@ -49,9 +49,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category = Flashlight)
-	AFlashlight* Flashlight;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = Flashlight)
+	TSubclassOf<AFlashlight> FlashlightClass;
+	TSoftObjectPtr<AFlashlight> Flashlight;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
