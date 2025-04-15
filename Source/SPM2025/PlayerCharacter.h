@@ -50,7 +50,7 @@ protected:
 	void InputSprint(const FInputActionValue& Value);
 
 public:	
-	// Called every frame
+	// Called every frameees
 	virtual void Tick(float DeltaTime) override;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = Flashlight)
 	TSubclassOf<AFlashlight> FlashlightClass;
