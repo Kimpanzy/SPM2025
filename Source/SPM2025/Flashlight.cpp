@@ -18,15 +18,11 @@ AFlashlight::AFlashlight()
 	Mesh->SetupAttachment(Root);
 
 	OuterSpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("OuterSpotLight"));
-	OuterSpotLight->SetupAttachment(RootComponent);
-	OuterSpotLight->SetIntensity(500.0f);
-	OuterSpotLight->SetAttenuationRadius(500.0f);
+	OuterSpotLight->SetupAttachment(Mesh);
 	OuterSpotLight->SetOuterConeAngle(30.0f);
 
 	InnerSpotLight = CreateDefaultSubobject<USpotLightComponent>(TEXT("InnerSpotLight"));
-	InnerSpotLight->SetupAttachment(RootComponent);
-	InnerSpotLight->SetIntensity(750.0f);
-	InnerSpotLight->SetAttenuationRadius(500.0f);
+	InnerSpotLight->SetupAttachment(Mesh);
 	InnerSpotLight->SetOuterConeAngle(10.0f);
 
 	bIsOn = false;
@@ -34,12 +30,21 @@ AFlashlight::AFlashlight()
 
 void AFlashlight::ToggleFlashlight()
 {
-	UE_LOG(LogTemp, Display, TEXT("Flashlight is toggling"));
 	bIsOn = !bIsOn;
-	OuterSpotLight->SetVisibility(bIsOn);
-	InnerSpotLight->SetVisibility(bIsOn);
-	Mesh->SetVisibility(bIsOn);
+	FlickerLight(bIsOn);
+	if (bIsOn)
+	{
+		Flicker();
+	}
+	//InnerSpotLight->SetVisibility(bIsOn);
+	//Mesh->SetVisibility(bIsOn);
 }
+
+void AFlashlight::FlickerLight(bool OnOrOff)
+{
+	OuterSpotLight->SetVisibility(OnOrOff);
+}
+
 
 // Called when the game starts or when spawned
 void AFlashlight::BeginPlay()
