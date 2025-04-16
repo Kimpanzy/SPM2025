@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "PlayerCharacter.generated.h"
 
+class USpringArmComponent;
 class UInputAction;
 class UInputMappingContext;
 class AFlashlight;
@@ -40,6 +41,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* CameraComponent;
+	UPROPERTY(EditAnywhere)
+	USpringArmComponent* SpringArm;
 
 	void InputMove(const FInputActionValue& Value);
 	void InputJump(const FInputActionValue& Value);
@@ -47,11 +50,11 @@ protected:
 	void InputSprint(const FInputActionValue& Value);
 
 public:	
-	// Called every frame
+	// Called every frameees
 	virtual void Tick(float DeltaTime) override;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, category = Flashlight)
-	AFlashlight* Flashlight;
-
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = Flashlight)
+	TSubclassOf<AFlashlight> FlashlightClass;
+	TSoftObjectPtr<AFlashlight> Flashlight;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 

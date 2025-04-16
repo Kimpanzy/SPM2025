@@ -7,6 +7,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -22,12 +23,14 @@ APlayerCharacter::APlayerCharacter()
 	{
 		SetRootComponent(GetCapsuleComponent());
 	}
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(FName("Camera"));
-	if (CameraComponent)
-	{
-		CameraComponent->SetupAttachment(RootComponent);
-		CameraComponent->bUsePawnControlRotation = true;
-	}
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>("Spring Arm");
+	SpringArm->SetupAttachment(RootComponent);
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
+	CameraComponent->SetupAttachment(SpringArm);
+	CameraComponent->bUsePawnControlRotation = false;
+	SpringArm->bUsePawnControlRotation = true;
+	SpringArm->bEnableCameraRotationLag = true;
+	SpringArm->CameraRotationLagSpeed = 1.0f;
 	
 }
 
@@ -43,7 +46,7 @@ void APlayerCharacter::BeginPlay()
 		}
 	}
 	//Spawn flashlight
-	Flashlight = GetWorld()->SpawnActor<AFlashlight>(AFlashlight::StaticClass());
+	Flashlight = GetWorld()->SpawnActor<AFlashlight>(FlashlightClass);
 	//Attach flashlight till kameran
 	if (Flashlight)
 	{
@@ -98,8 +101,8 @@ void APlayerCharacter::InputLook(const FInputActionValue& Value)
 	const FVector2D LookAxisValue = Value.Get<FVector2D>();
 	if (GetController())
 	{
-		AddControllerYawInput(LookAxisValue.X);
-		AddControllerPitchInput(LookAxisValue.Y);
+		AddControllerYawInput(LookAxisValue.X * 0.34f);
+		AddControllerPitchInput(LookAxisValue.Y* 0.34f);
 	}
 	
 }
