@@ -70,7 +70,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInputComponent->BindAction(FlashlightAction,ETriggerEvent::Started, this, &APlayerCharacter::ToggleFlashlight);
-		EnhancedInputComponent->BindAction(JumpAction,ETriggerEvent::Triggered, this, &APlayerCharacter::InputJump);
 		EnhancedInputComponent->BindAction(MovementAction,ETriggerEvent::Triggered, this, &APlayerCharacter::InputMove);
 		EnhancedInputComponent->BindAction(LookAction,ETriggerEvent::Triggered, this, &APlayerCharacter::InputLook);
 		
@@ -88,10 +87,7 @@ void APlayerCharacter::InputMove(const FInputActionValue& Value)
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	AddMovementInput(RightDirection,MovementVector.X);
 }
-void APlayerCharacter::InputJump(const FInputActionValue& Value)
-{
-	Jump();
-}
+
 void InputSprint(const FInputActionValue& Value)
 {
 	
