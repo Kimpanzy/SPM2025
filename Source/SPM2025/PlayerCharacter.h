@@ -13,6 +13,8 @@ class UInputMappingContext;
 class AFlashlight;
 class UCameraComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFlashLightDelegate);
+
 UCLASS()
 class SPM2025_API APlayerCharacter : public ACharacter
 {
@@ -59,5 +61,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void ToggleFlashlight(const FInputActionValue& value);
+
+	UPROPERTY(BlueprintAssignable)
+	FFlashLightDelegate OnFlashlightToggled;
+	
 
 };

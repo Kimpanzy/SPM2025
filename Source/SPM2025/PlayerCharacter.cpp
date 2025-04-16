@@ -105,7 +105,7 @@ void APlayerCharacter::InputLook(const FInputActionValue& Value)
 
 void APlayerCharacter::ToggleFlashlight(const FInputActionValue& Value)
 {
-	
+	OnFlashlightToggled.Broadcast();
 	Flashlight->ToggleFlashlight();
 }
 
