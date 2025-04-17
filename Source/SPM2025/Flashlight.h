@@ -28,8 +28,7 @@ protected:
 	USpotLightComponent* OuterSpotLight;
 	UPROPERTY(VisibleAnywhere,Category="Light")
 	USpotLightComponent* InnerSpotLight;
-	UPROPERTY(VisibleAnywhere)
-	float Battery = 100.0f;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -39,6 +38,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsOn;
+	UPROPERTY(BlueprintReadWrite)
+	bool bCanLight = true;
 	
 	UFUNCTION(BlueprintCallable)
 	void FlickerLight(bool OnOrOff);

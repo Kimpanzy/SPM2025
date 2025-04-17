@@ -56,7 +56,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = Flashlight)
 	TSubclassOf<AFlashlight> FlashlightClass;
-	TSoftObjectPtr<AFlashlight> Flashlight;
+	UPROPERTY(BlueprintReadOnly, category = Flashlight)
+	AFlashlight* Flashlight;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
