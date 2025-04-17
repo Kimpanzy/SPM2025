@@ -37,8 +37,6 @@ APlayerCharacter::APlayerCharacter()
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
-	Super::BeginPlay();
-	UE_LOG(LogTemp, Display, TEXT("APlayerCharacter::BeginPlay"));
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* SubSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
@@ -54,6 +52,7 @@ void APlayerCharacter::BeginPlay()
 		Flashlight->AttachToComponent(CameraComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		Flashlight->SetActorRelativeLocation(FVector(30.0f, 0.0f, 10.0f));
 	}
+	Super::BeginPlay();
 }
 
 // Called every frame
