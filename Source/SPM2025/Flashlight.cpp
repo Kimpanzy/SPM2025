@@ -30,6 +30,10 @@ AFlashlight::AFlashlight()
 
 void AFlashlight::ToggleFlashlight()
 {
+	if (!bCanLight)
+	{
+		return;
+	}
 	bIsOn = !bIsOn;
 	FlickerLight(bIsOn);
 	if (bIsOn)
