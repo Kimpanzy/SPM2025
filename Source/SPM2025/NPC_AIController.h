@@ -19,4 +19,11 @@ public:
 
 protected:
 	virtual void OnPossess(APawn* InPawn) override;
+private:
+	class UAISenseConfig_Sight* SightConfig;
+
+	void SetupPerceptionSystem();
+
+	UFUNCTION()
+	void OnTargetDetection(AActor* Actor, FAIStimulus Stimulus);
 };

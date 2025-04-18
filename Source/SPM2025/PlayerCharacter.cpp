@@ -9,8 +9,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
-
-
+#include "Perception/AIPerceptionStimuliSourceComponent.h"
+#include "Perception/AISense_Sight.h"
 
 
 // Sets default values
@@ -31,6 +31,7 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm->bUsePawnControlRotation = true;
 	SpringArm->bEnableCameraRotationLag = true;
 	SpringArm->CameraRotationLagSpeed = 1.0f;
+	SetupStimulusSource();
 	
 }
 
@@ -101,6 +102,17 @@ void APlayerCharacter::InputLook(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisValue.Y* 0.34f);
 	}
 	
+}
+
+void APlayerCharacter::SetupStimulusSource()
+{
+	StimulusSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>("Stimulus");
+	if (StimulusSource)
+	{
+		StimulusSource->RegisterForSense(TSubclassOf<UAISense_Sight>());
+		StimulusSource->RegisterWithPerceptionSystem();
+		
+	}
 }
 
 void APlayerCharacter::ToggleFlashlight(const FInputActionValue& Value)
