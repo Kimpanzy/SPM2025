@@ -41,7 +41,7 @@ void ANPC_AIController::SetupPerceptionSystem()
 		SightConfig->SightRadius = 500.0f;
 		SightConfig->LoseSightRadius = SightConfig->SightRadius + 25.f;
 		SightConfig->PeripheralVisionAngleDegrees = 90.0f;
-		SightConfig->SetMaxAge(5.f);
+		SightConfig->SetMaxAge(2.f);
 		SightConfig->AutoSuccessRangeFromLastSeenLocation = 520.f;
 		SightConfig->DetectionByAffiliation.bDetectEnemies = true;
 		SightConfig->DetectionByAffiliation.bDetectFriendlies = true;

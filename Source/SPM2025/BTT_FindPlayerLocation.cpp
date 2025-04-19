@@ -8,7 +8,8 @@
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 
-UBTT_FindPlayerLocation::UBTT_FindPlayerLocation(FObjectInitializer const& FObjectInitializer)
+UBTT_FindPlayerLocation::UBTT_FindPlayerLocation(FObjectInitializer const& ObjectInitializer):
+	UBTTask_BlackboardBase{ObjectInitializer}
 {
 	NodeName = "Find Player Location";
 }
