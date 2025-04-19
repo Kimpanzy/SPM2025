@@ -19,10 +19,10 @@ EBTNodeResult::Type UBTT_FindPatrolPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 	if (auto const cont = Cast<ANPC_AIController>(OwnerComp.GetAIOwner()))
 	{
 		//Hämta blackboardcomponent från behavior tree
-		if (auto* const bc = OwnerComp.GetBlackboardComponent())
+		if (auto* const BC = OwnerComp.GetBlackboardComponent())
 		{
 			//Hämta current patrol point från index i blackboard
-			auto const Index = bc->GetValueAsInt(GetSelectedBlackboardKey());
+			auto const Index = BC->GetValueAsInt(GetSelectedBlackboardKey());
 
 			//Hämta AI(NPC)
 			if (auto* npc = Cast<ANPC>(cont->GetPawn()))
@@ -32,7 +32,7 @@ EBTNodeResult::Type UBTT_FindPatrolPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 				
 				//Convertera point till global
 				auto const GlobalPoint = npc->GetPatrolPath()->GetActorTransform().TransformPosition(Point);
-				bc->SetValueAsVector(PatrolPathVectorKey.SelectedKeyName, GlobalPoint);
+				BC->SetValueAsVector(PatrolPathVectorKey.SelectedKeyName, GlobalPoint);
 
 				//Avsluta med success
 				FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

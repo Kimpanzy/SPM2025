@@ -8,6 +8,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AIPerceptionTypes.h"
+#include "Perception/AISenseConfig_Hearing.h"
 #include "Perception/AISenseConfig_Sight.h"
 
 ANPC_AIController::ANPC_AIController(FObjectInitializer const& ObjectInitializer)
@@ -37,7 +38,7 @@ void ANPC_AIController::SetupPerceptionSystem()
 	if (SightConfig)
 	{
 		SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(
-			"Perception Component"));
+			"Sight Component"));
 		SightConfig->SightRadius = 500.0f;
 		SightConfig->LoseSightRadius = SightConfig->SightRadius + 25.f;
 		SightConfig->PeripheralVisionAngleDegrees = 90.0f;
@@ -51,8 +52,20 @@ void ANPC_AIController::SetupPerceptionSystem()
 		GetPerceptionComponent()->OnTargetPerceptionUpdated.
 		AddDynamic(this, &ANPC_AIController::OnTargetDetection);
 		GetPerceptionComponent()->ConfigureSense(*SightConfig);
-		
 	}
+	/*HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
+	if (HearingConfig)
+	{
+		SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(
+			"Hearing Component"));
+		HearingConfig->HearingRange = 500.0f;
+		HearingConfig->LoSHearingRange = HearingConfig->HearingRange + 25.f;
+
+		GetPerceptionComponent()->SetDominantSense(*HearingConfig->GetSenseImplementation());
+		GetPerceptionComponent()->OnTargetPerceptionUpdated.
+		AddDynamic(this, &ANPC_AIController::OnTargetDetection);
+		GetPerceptionComponent()->ConfigureSense(*HearingConfig);
+	}*/
 }
 
 void ANPC_AIController::OnTargetDetection(AActor* Actor, FAIStimulus Stimulus)
