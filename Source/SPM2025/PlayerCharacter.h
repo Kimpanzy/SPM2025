@@ -23,6 +23,18 @@ class SPM2025_API APlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = Flashlight)
+	TSubclassOf<AFlashlight> FlashlightClass;
+	UPROPERTY(BlueprintReadOnly, category = Flashlight)
+	AFlashlight* Flashlight;
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void ToggleFlashlight(const FInputActionValue& value);
+
+	UPROPERTY(BlueprintAssignable)
+	FFlashLightDelegate OnFlashlightToggled;
 
 protected:
 	virtual void BeginPlay() override;
@@ -51,20 +63,13 @@ protected:
 	void InputLook(const FInputActionValue& Value);
 	void InputSprint(const FInputActionValue& Value);
 
-public:	
-	// Called every frameees
-	virtual void Tick(float DeltaTime) override;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = Flashlight)
-	TSubclassOf<AFlashlight> FlashlightClass;
-	UPROPERTY(BlueprintReadOnly, category = Flashlight)
-	AFlashlight* Flashlight;
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+private:
+	//Så AI kan höra/se spelare
+	class UAIPerceptionStimuliSourceComponent* StimulusSource;
 
-	void ToggleFlashlight(const FInputActionValue& value);
-
-	UPROPERTY(BlueprintAssignable)
-	FFlashLightDelegate OnFlashlightToggled;
+	void SetupStimulusSource();
+	
+	
 	
 
 };
