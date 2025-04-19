@@ -25,6 +25,7 @@ public:
 	UBehaviorTree* GetBehaviorTree() const;
 
 	APatrolPath* GetPatrolPath() const;
+	void SetPatrolPath(APatrolPath* path);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

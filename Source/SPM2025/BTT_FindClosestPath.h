@@ -6,6 +6,8 @@
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
 #include "BTT_FindClosestPath.generated.h"
 
+class APatrolPath;
+
 UCLASS()
 class SPM2025_API UBTT_FindClosestPath : public UBTTask_BlackboardBase
 {
@@ -14,6 +16,11 @@ public:
 	explicit UBTT_FindClosestPath();
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
-private:
+	UPROPERTY(EditAnywhere, Category = "Blackboard", meta = (AllowPrivateAccess = "true"))
+	FBlackboardKeySelector ClosestPathKey;
+
+	UPROPERTY(EditAnywhere, Category = "Blackboard", meta = (AllowPrivateAccess = "true"))
+	FBlackboardKeySelector ClosestIndexKey;
+	
 	
 };

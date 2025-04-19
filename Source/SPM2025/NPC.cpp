@@ -42,3 +42,8 @@ APatrolPath* ANPC::GetPatrolPath() const
 	return PatrolPath;
 }
 
+void ANPC::SetPatrolPath(APatrolPath* path)
+{
+	PatrolPath = path;
+}
+
