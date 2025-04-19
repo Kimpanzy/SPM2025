@@ -27,6 +27,11 @@ FVector APatrolPath::GetPatrolPoint(int const Index) const
 	return PatrolPoints[Index];
 }
 
+FVector APatrolPath::setPatrolPoint(int const Index)
+{
+	return PatrolPoints[Index];
+}
+
 int APatrolPath::Num() const
 {
 	return PatrolPoints.Num();
