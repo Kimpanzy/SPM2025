@@ -27,4 +27,5 @@ private:
 
 	UFUNCTION()
 	void OnTargetDetection(AActor* Actor, FAIStimulus Stimulus);
+	
 };
