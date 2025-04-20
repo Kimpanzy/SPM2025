@@ -57,7 +57,7 @@ EBTNodeResult::Type UBTT_FindClosestPath::ExecuteTask(UBehaviorTreeComponent& Ow
 		{
 			
 			NPC->SetPatrolPath(ClosestPath);
-			NPC->GetPatrolPath()->setPatrolPoint(ClosestIndex);
+			NPC->GetPatrolPath()->SetPatrolPoint(ClosestIndex);
 			
 		}
 		return EBTNodeResult::Succeeded;
