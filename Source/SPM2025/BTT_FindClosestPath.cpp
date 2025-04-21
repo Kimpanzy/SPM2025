@@ -34,7 +34,7 @@ EBTNodeResult::Type UBTT_FindClosestPath::ExecuteTask(UBehaviorTreeComponent& Ow
 	for (auto* Actor : PathFound)
 	{
 		APatrolPath* Path = Cast<APatrolPath>(Actor);
-		if (!Path) continue;
+		if (!Path && Path->Num() == 0) continue;
 
 		for (int i = 0; i < Path->Num(); ++i)
 		{

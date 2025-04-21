@@ -34,7 +34,7 @@ void ANPC_AIController::OnPossess(APawn* InPawn)
 
 void ANPC_AIController::SetupPerceptionSystem()
 {
-	SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
+	/*SightConfig = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("SightConfig"));
 	if (SightConfig)
 	{
 		SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(
@@ -52,26 +52,37 @@ void ANPC_AIController::SetupPerceptionSystem()
 		GetPerceptionComponent()->OnTargetPerceptionUpdated.
 		AddDynamic(this, &ANPC_AIController::OnTargetDetection);
 		GetPerceptionComponent()->ConfigureSense(*SightConfig);
-	}
-	/*HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
+	}*/
+	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("HearingConfig"));
 	if (HearingConfig)
 	{
 		SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(
 			"Hearing Component"));
-		HearingConfig->HearingRange = 500.0f;
+		
+		HearingConfig->HearingRange = 1000.0f;
 		HearingConfig->LoSHearingRange = HearingConfig->HearingRange + 25.f;
 
+		HearingConfig->SetMaxAge(2.f);
+		HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
+		HearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
+		HearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
+		
 		GetPerceptionComponent()->SetDominantSense(*HearingConfig->GetSenseImplementation());
+		
 		GetPerceptionComponent()->OnTargetPerceptionUpdated.
 		AddDynamic(this, &ANPC_AIController::OnTargetDetection);
+		
 		GetPerceptionComponent()->ConfigureSense(*HearingConfig);
-	}*/
+		
+		
+	}
 }
 
 void ANPC_AIController::OnTargetDetection(AActor* Actor, FAIStimulus Stimulus)
 {
 	if (auto* const player = Cast<APlayerCharacter>(Actor))
 	{
-		GetBlackboardComponent()->SetValueAsBool("CanSeePlayer",Stimulus.WasSuccessfullySensed());
+		//GetBlackboardComponent()->SetValueAsBool("CanSeePlayer",Stimulus.WasSuccessfullySensed());
+		GetBlackboardComponent()->SetValueAsBool("CanHearPlayer",Stimulus.WasSuccessfullySensed());
 	}
 }
