@@ -83,11 +83,5 @@ void ANPC_AIController::OnTargetDetection(AActor* Actor, FAIStimulus Stimulus)
 	{
 		//GetBlackboardComponent()->SetValueAsBool("CanSeePlayer",Stimulus.WasSuccessfullySensed());
 		GetBlackboardComponent()->SetValueAsBool("CanHearPlayer",Stimulus.WasSuccessfullySensed());
-		GetBlackboardComponent()->SetValueAsObject("TargetActor",player);
-	}
-	else
-	{
-		GetBlackboardComponent()->SetValueAsBool("CanHearActor",Stimulus.WasSuccessfullySensed());
-		GetBlackboardComponent()->SetValueAsVector("TargetLocation",Actor->GetActorLocation());
 	}
 }
