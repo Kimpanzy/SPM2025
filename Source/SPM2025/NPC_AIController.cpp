@@ -60,7 +60,6 @@ void ANPC_AIController::SetupPerceptionSystem()
 			"Hearing Component"));
 		
 		HearingConfig->HearingRange = 1000.0f;
-		HearingConfig->LoSHearingRange = HearingConfig->HearingRange + 25.f;
 
 		HearingConfig->SetMaxAge(2.f);
 		HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
