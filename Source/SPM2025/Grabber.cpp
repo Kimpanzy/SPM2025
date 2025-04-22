@@ -4,6 +4,8 @@
 #include "Grabber.h"
 
 #include "Camera/CameraComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+
 
 // Sets default values for this component's properties
 UGrabber::UGrabber()
@@ -14,18 +16,49 @@ UGrabber::UGrabber()
 
 	
 }
+void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (!GrabbedActor) return;
+
+	FVector Location = GrabbedActor->GetComponentLocation();
+	FVector Extent = GrabbedActor->Bounds.BoxExtent;
+
+	TArray<UPrimitiveComponent*> OverlappingComponents;
+	bool bIsOverlapping = UKismetSystemLibrary::BoxOverlapComponents(
+		GetWorld(),
+		Location,
+		Extent,
+		TArray<TEnumAsByte<EObjectTypeQuery>>{UEngineTypes::ConvertToObjectType(ECC_WorldStatic)},
+		UPrimitiveComponent::StaticClass(),
+		TArray<AActor*>{GetOwner(), GrabbedActor->GetOwner()},
+		OverlappingComponents
+	);
+	DrawDebugBox(GetWorld(), Location, Extent, FColor::Yellow, false, 0.1f);
+
+	bCanDrop = !bIsOverlapping;
+}
 
 void UGrabber::Release()
 {
 	if (GrabbedActor)
 	{
+
+		if (!bCanDrop)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Can't release — object is overlapping with the world!"));
+			return;
+		}
+		
 		GrabbedActor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 		GrabbedActor->SetSimulatePhysics(true);
 		GrabbedActor->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GrabbedActor->SetCollisionResponseToAllChannels(ECR_Block);
 		GrabbedActor = nullptr;
 	}
 }
+
 
 void UGrabber::Grab(FHitResult HitResult)
 {
@@ -33,6 +66,7 @@ void UGrabber::Grab(FHitResult HitResult)
 	UPrimitiveComponent* HitComponent = HitResult.GetComponent();
 	HitComponent->SetSimulatePhysics(false);
 	HitComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	HitComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
 	AActor* Owner = GetOwner();
 	UCameraComponent* Camera = Owner->FindComponentByClass<UCameraComponent>();
 	FVector RelativeOffset(100.f, -50.f, -50.f);  // Forward, Left, Down from camera
