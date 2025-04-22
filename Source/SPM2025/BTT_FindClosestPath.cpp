@@ -8,6 +8,7 @@
 #include "PatrolPath.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Math/UnitConversion.h"
 
 UBTT_FindClosestPath::UBTT_FindClosestPath()
 {
@@ -30,7 +31,7 @@ EBTNodeResult::Type UBTT_FindClosestPath::ExecuteTask(UBehaviorTreeComponent& Ow
 	float ClosestDistance = FLT_MAX;
 	int ClosestIndex = -1;
 	APatrolPath* ClosestPath = nullptr;
-
+	
 	for (auto* Actor : PathFound)
 	{
 		APatrolPath* Path = Cast<APatrolPath>(Actor);
@@ -44,6 +45,7 @@ EBTNodeResult::Type UBTT_FindClosestPath::ExecuteTask(UBehaviorTreeComponent& Ow
 				ClosestDistance = Dist;
 				ClosestIndex = i;
 				ClosestPath = Path;
+				UE_LOG(LogTemp,Display,TEXT("Find Closest Path %f dist,%d index, %s path "),ClosestDistance,ClosestIndex, *ClosestPath->GetActorNameOrLabel());
 			}
 		}
 	}
