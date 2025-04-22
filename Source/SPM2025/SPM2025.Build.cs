@@ -17,6 +17,7 @@ public class SPM2025 : ModuleRules
 			"AIModule",
 			"GameplayTasks",
 			"NavigationSystem",
+			"PhysicsCore"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

@@ -20,14 +20,19 @@ protected:
 	// Called when the game starts
 	
 public:
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
 	UFUNCTION(BlueprintCallable)
 	void Release();
 	UFUNCTION(BlueprintCallable)
 	void Grab(FHitResult HitResult);
 	UPROPERTY(BlueprintReadWrite)
 	UStaticMeshComponent* GrabbedActor;
-private:	
-	// Called every frame
+	
+private:
+	UPROPERTY(BlueprintReadOnly, Category = "Grab", meta = (AllowPrivateAccess = "true"))
+	bool bCanDrop = false;
+
 	UPROPERTY(EditAnywhere)
 	float MaxGrabDistance = 400;
 
