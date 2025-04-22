@@ -24,7 +24,12 @@ APatrolPath::APatrolPath()
 
 FVector APatrolPath::GetPatrolPoint(int const Index) const
 {
-	return PatrolPoints[Index];
+	if (PatrolPoints.IsValidIndex(Index))
+	{
+		// Convert local vector (PatrolPoints[Index]) to world space
+		return PatrolPoints[Index];
+	}
+	return FVector::ZeroVector;
 }
 
 FVector APatrolPath::SetPatrolPoint(int const Index)

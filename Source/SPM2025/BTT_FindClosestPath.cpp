@@ -34,18 +34,21 @@ EBTNodeResult::Type UBTT_FindClosestPath::ExecuteTask(UBehaviorTreeComponent& Ow
 	
 	for (auto* Actor : PathFound)
 	{
+		
 		APatrolPath* Path = Cast<APatrolPath>(Actor);
-		if (!Path && Path->Num() == 0) continue;
+		if (!Path || Path->Num() == 0) continue;
 
 		for (int i = 0; i < Path->Num(); ++i)
 		{
-			float Dist = FVector::Dist(AIPosition,Path->GetPatrolPoint(i));
+			FVector WorldPatrolPoint = Path->GetActorTransform().TransformPosition(Path->GetPatrolPoint(i));
+			float Dist = FVector::Dist(AIPosition,WorldPatrolPoint);
+				UE_LOG(LogTemp, Warning, TEXT("Path: %s | Point %d | Dist: %f"),
+				*Path->GetName(), i, Dist);
 			if (Dist < ClosestDistance)
 			{
 				ClosestDistance = Dist;
 				ClosestIndex = i;
 				ClosestPath = Path;
-				UE_LOG(LogTemp,Display,TEXT("Find Closest Path %f dist,%d index, %s path "),ClosestDistance,ClosestIndex, *ClosestPath->GetActorNameOrLabel());
 			}
 		}
 	}
@@ -54,10 +57,10 @@ EBTNodeResult::Type UBTT_FindClosestPath::ExecuteTask(UBehaviorTreeComponent& Ow
 		auto* BC = OwnerComp.GetBlackboardComponent();
 		BC->SetValueAsObject(ClosestPathKey.SelectedKeyName, ClosestPath);
 		BC->SetValueAsInt(ClosestIndexKey.SelectedKeyName, ClosestIndex);
+		BC->SetValueAsInt("PatrolPathIndex", ClosestIndex);
 		ANPC* const NPC = Cast<ANPC>(cont);
 		if (NPC)
 		{
-			
 			NPC->SetPatrolPath(ClosestPath);
 			NPC->GetPatrolPath()->SetPatrolPoint(ClosestIndex);
 			
