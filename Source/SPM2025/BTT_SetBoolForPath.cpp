@@ -5,7 +5,7 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 
-UBTT_SetBoolForPath::UBTT_SetBoolForPath()
+UBTT_SetBoolForPath::UBTT_SetBoolForPath(FObjectInitializer const& ObjectInitializer) : Super(ObjectInitializer)
 {
 	NodeName = "SetBoolForPath";
 }

@@ -4,20 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
-#include "BTT_SetBoolForPath.generated.h"
+#include "BTT_ClearBlackBoardKey.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SPM2025_API UBTT_SetBoolForPath : public UBTTask_BlackboardBase
+class SPM2025_API UBTT_ClearBlackBoardKey : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
 
 public:
-	explicit UBTT_SetBoolForPath(FObjectInitializer const& ObjectInitializer);
+	explicit UBTT_ClearBlackBoardKey(FObjectInitializer const& ObjectInitializer);
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
-private:
-	UPROPERTY(EditAnywhere, Category = "Blackboard")
-	FBlackboardKeySelector BoolKey;
 };
