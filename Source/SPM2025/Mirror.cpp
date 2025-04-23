@@ -3,25 +3,41 @@
 
 #include "Mirror.h"
 
-// Sets default values
-AMirror::AMirror()
+AMirror::AMirror(): RotatingTo(), RotatingFrom()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
-
+	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
+void AMirror::RotationUpdate(const float Alpha)
+{
+	SetActorRotation(FMath::Lerp(RotatingFrom, RotatingTo, Alpha));
+}
+
 void AMirror::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	FOnTimelineFloat RotationUpdateEvent;
+	RotationUpdateEvent.BindDynamic(this, &AMirror::RotationUpdate);
+
+	RotationTimeline.AddInterpFloat(RotationCurve, RotationUpdateEvent);
 }
 
-// Called every frame
-void AMirror::Tick(float DeltaTime)
+void AMirror::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	RotationTimeline.TickTimeline(DeltaTime);
 }
 
+void AMirror::Rotate()
+{
+	if (RotationTimeline.IsPlaying())
+	{
+		return;
+	}
+
+	RotatingFrom = GetActorRotation();
+	RotatingTo = RotatingFrom + RotationAngle;
+
+	RotationTimeline.PlayFromStart();
+}
