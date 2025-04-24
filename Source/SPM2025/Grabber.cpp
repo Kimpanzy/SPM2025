@@ -59,11 +59,29 @@ void UGrabber::Release()
 	}
 }
 
+void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation)
+{
+	if (GrabbedActor)
+	{
 
-void UGrabber::Grab(FHitResult HitResult)
+		if (!bCanDrop)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Can't release — object is overlapping with the world!"));
+			return;
+		}
+		
+		GrabbedActor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		GrabbedActor->SetCollisionResponseToAllChannels(ECR_Block);
+		GrabbedActor->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GrabbedActor->GetOwner()->SetActorLocationAndRotation(Location, Rotation);
+		GrabbedActor = nullptr;
+	}
+}
+
+
+void UGrabber::Grab(UStaticMeshComponent* HitComponent)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grabbed Actor"));
-	UPrimitiveComponent* HitComponent = HitResult.GetComponent();
 	HitComponent->SetSimulatePhysics(false);
 	HitComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	HitComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
@@ -75,8 +93,6 @@ void UGrabber::Grab(FHitResult HitResult)
 	HitComponent->AttachToComponent(Camera, FAttachmentTransformRules::KeepRelativeTransform);
 	HitComponent->SetRelativeLocation(RelativeOffset);
 	HitComponent->SetRelativeRotation(OffsetRotation);
-	
-	UStaticMeshComponent* Actor = Cast<UStaticMeshComponent>(HitResult.GetComponent());
-	GrabbedActor = Actor;
+	GrabbedActor = HitComponent;
 
 }
