@@ -59,6 +59,26 @@ void UGrabber::Release()
 	}
 }
 
+void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation)
+{
+	if (GrabbedActor)
+	{
+
+		if (!bCanDrop)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Can't release — object is overlapping with the world!"));
+			return;
+		}
+		
+		GrabbedActor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		GrabbedActor->SetSimulatePhysics(true);
+		GrabbedActor->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		GrabbedActor->SetCollisionResponseToAllChannels(ECR_Block);
+		GrabbedActor->GetOwner()->SetActorLocationAndRotation(Location, Rotation);
+		GrabbedActor = nullptr;
+	}
+}
+
 
 void UGrabber::Grab(FHitResult HitResult)
 {

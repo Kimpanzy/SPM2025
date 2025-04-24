@@ -25,6 +25,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Release();
 	UFUNCTION(BlueprintCallable)
+	void ReleaseAtPos(FVector Location, FRotator Rotation);
+	UFUNCTION(BlueprintCallable)
 	void Grab(FHitResult HitResult);
 	UPROPERTY(BlueprintReadWrite)
 	UStaticMeshComponent* GrabbedActor;
