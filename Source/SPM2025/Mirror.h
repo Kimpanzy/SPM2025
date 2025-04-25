@@ -5,10 +5,11 @@
 #include "CoreMinimal.h"
 #include "Components/TimelineComponent.h"
 #include "GameFramework/Actor.h"
+#include "Interactable.h"
 #include "Mirror.generated.h"
 
 UCLASS()
-class SPM2025_API AMirror : public AActor
+class SPM2025_API AMirror : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 
@@ -38,4 +39,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Mirror")
 	void Rotate();
+
+	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
+	void OnInteract_Implementation(FHitResult HitResult) override { Rotate(); };
+
+	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
+	FText GetInteractPrompt_Implementation(FHitResult HitResult) override { return FText::FromString(TEXT("Rotate")); };
 };
