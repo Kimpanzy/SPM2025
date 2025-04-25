@@ -47,3 +47,18 @@ void ANPC::SetPatrolPath(APatrolPath* path)
 	PatrolPath = path;
 }
 
+UAnimMontage* ANPC::GetMontage() const
+{
+	return Montage;
+}
+
+int ANPC::MeleeAttack_Implementation()
+{
+	UE_LOG(LogTemp, Warning,TEXT("ATTACKING!"))
+	if (Montage)
+	{
+		PlayAnimMontage(Montage);
+	}
+	return 0;
+}
+
