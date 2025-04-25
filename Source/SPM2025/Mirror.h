@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/TimelineComponent.h"
 #include "GameFramework/Actor.h"
 #include "Mirror.generated.h"
 
@@ -10,17 +11,31 @@ UCLASS()
 class SPM2025_API AMirror : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+
+public:
 	AMirror();
 
+private:
+	FRotator RotatingTo;
+	FRotator RotatingFrom;
+
+	FTimeline RotationTimeline;
+
+	UFUNCTION()
+	void RotationUpdate(const float Alpha);
+
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Mirror")
+	FRotator RotationAngle = FRotator(0, 90, 0);
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Mirror")
+	UCurveFloat* RotationCurve = nullptr;
+
+	virtual void Tick(const float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category="Mirror")
+	void Rotate();
 };
