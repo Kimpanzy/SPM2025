@@ -54,6 +54,7 @@ UAnimMontage* ANPC::GetMontage() const
 
 int ANPC::MeleeAttack_Implementation()
 {
+	UE_LOG(LogTemp, Warning,TEXT("ATTACKING!"))
 	if (Montage)
 	{
 		PlayAnimMontage(Montage);
