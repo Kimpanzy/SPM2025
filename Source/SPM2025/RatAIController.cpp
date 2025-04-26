@@ -8,7 +8,7 @@ TArray<FVector> ARatAIController::GetAllTargets()
 	return  Targets;
 }
 
-int ARatAIController::GetCurrentIndex()
+int ARatAIController::GetCurrentIndex() const
 {
 	return CurrentIndex;
 }
@@ -16,4 +16,9 @@ int ARatAIController::GetCurrentIndex()
 void ARatAIController::SetCurrentIndex(int NewIndex)
 {
 	CurrentIndex = NewIndex;
+}
+
+AActor* ARatAIController::GetCheese() const
+{
+	return Cheese;
 }

@@ -6,8 +6,11 @@
 #include "Components/SceneComponent.h"
 #include "Grabber.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemGrabbed, UStaticMeshComponent*, GrabbedItem);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemDropped, UStaticMeshComponent*, DroppedItem);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+
 class SPM2025_API UGrabber : public USceneComponent
 {
 	GENERATED_BODY()
@@ -30,10 +33,13 @@ public:
 	void Grab(UStaticMeshComponent* HitComponent);
 	UPROPERTY(BlueprintReadWrite)
 	UStaticMeshComponent* GrabbedActor;
+	UPROPERTY(BlueprintAssignable)
+	FItemGrabbed ItemGrabbed;
+	UPROPERTY(BlueprintAssignable)
+	FItemDropped ItemDropped;
+	
 	
 private:
-	UPROPERTY(BlueprintReadOnly, Category = "Grab", meta = (AllowPrivateAccess = "true"))
-	bool bCanDrop = false;
 
 	UPROPERTY(EditAnywhere)
 	float MaxGrabDistance = 400;

@@ -22,8 +22,15 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	int CurrentIndex;
 
+	UPROPERTY(BlueprintReadWrite)
+	AActor* Cheese;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool bPlayerIsHoldingCheese;
+	
 	TArray<FVector> GetAllTargets();
 
-	int GetCurrentIndex();
+	int GetCurrentIndex() const;
 	void SetCurrentIndex(int NewIndex);
+	AActor* GetCheese() const;
 };

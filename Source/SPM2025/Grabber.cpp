@@ -22,32 +22,29 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 
 	if (!GrabbedActor) return;
 
-	FVector Location = GrabbedActor->GetComponentLocation();
-	FVector Extent = GrabbedActor->Bounds.BoxExtent;
-
-	TArray<UPrimitiveComponent*> OverlappingComponents;
-	bool bIsOverlapping = UKismetSystemLibrary::BoxOverlapComponents(
-		GetWorld(),
-		Location,
-		Extent,
-		TArray<TEnumAsByte<EObjectTypeQuery>>{UEngineTypes::ConvertToObjectType(ECC_WorldStatic)},
-		UPrimitiveComponent::StaticClass(),
-		TArray<AActor*>{GetOwner(), GrabbedActor->GetOwner()},
-		OverlappingComponents
-	);
-	DrawDebugBox(GetWorld(), Location, Extent, FColor::Yellow, false, 0.1f);
-
-	bCanDrop = !bIsOverlapping;
+	
 }
 
 void UGrabber::Release()
 {
 	if (GrabbedActor)
 	{
+		FVector Location = GrabbedActor->GetComponentLocation();
+		FVector Extent = GrabbedActor->Bounds.BoxExtent;
 
-		if (!bCanDrop)
+		TArray<UPrimitiveComponent*> OverlappingComponents;
+		bool bIsOverlapping = UKismetSystemLibrary::BoxOverlapComponents(
+			GetWorld(),
+			Location,
+			Extent,
+			TArray<TEnumAsByte<EObjectTypeQuery>>{UEngineTypes::ConvertToObjectType(ECC_WorldStatic)},
+			UPrimitiveComponent::StaticClass(),
+			TArray<AActor*>{GetOwner(), GrabbedActor->GetOwner()},
+			OverlappingComponents
+		);
+		DrawDebugBox(GetWorld(), Location, Extent, FColor::Yellow, false, 0.1f);
+		if (bIsOverlapping)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Can't release — object is overlapping with the world!"));
 			return;
 		}
 		
@@ -55,6 +52,7 @@ void UGrabber::Release()
 		GrabbedActor->SetSimulatePhysics(true);
 		GrabbedActor->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		GrabbedActor->SetCollisionResponseToAllChannels(ECR_Block);
+		ItemDropped.Broadcast(GrabbedActor);
 		GrabbedActor = nullptr;
 	}
 }
@@ -69,6 +67,7 @@ void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation)
 		GrabbedActor->SetCollisionResponseToAllChannels(ECR_Block);
 		GrabbedActor->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 		GrabbedActor->GetOwner()->SetActorLocationAndRotation(Location, Rotation);
+		ItemDropped.Broadcast(GrabbedActor);
 		GrabbedActor = nullptr;
 	}
 }
@@ -76,7 +75,6 @@ void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation)
 
 void UGrabber::Grab(UStaticMeshComponent* HitComponent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Grabbed Actor"));
 	HitComponent->SetSimulatePhysics(false);
 	HitComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	HitComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
@@ -89,5 +87,6 @@ void UGrabber::Grab(UStaticMeshComponent* HitComponent)
 	HitComponent->SetRelativeLocation(RelativeOffset);
 	HitComponent->SetRelativeRotation(OffsetRotation);
 	GrabbedActor = HitComponent;
+	ItemGrabbed.Broadcast(GrabbedActor);
 
 }
