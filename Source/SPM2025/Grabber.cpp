@@ -63,12 +63,7 @@ void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation)
 {
 	if (GrabbedActor)
 	{
-
-		if (!bCanDrop)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Can't release — object is overlapping with the world!"));
-			return;
-		}
+		
 		
 		GrabbedActor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 		GrabbedActor->SetCollisionResponseToAllChannels(ECR_Block);
