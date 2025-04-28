@@ -6,6 +6,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "PatrolPath.h"
 #include "CombatInterface.h"
+#include "PlayerCharacter.h"
 #include "Animation/AnimMontage.h"
 #include "GameFramework/Character.h"
 #include "NPC.generated.h"
@@ -45,4 +46,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* Montage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player", meta = (AllowPrivateAccess = "true"))
+	APlayerCharacter* Player;
 };

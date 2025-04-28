@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "NPC_AIController.h"
 #include "PlayerCharacter.generated.h"
 
 class USpringArmComponent;
@@ -14,6 +15,7 @@ class AFlashlight;
 class UCameraComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFlashLightDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDied);
 
 UCLASS()
 class SPM2025_API APlayerCharacter : public ACharacter
@@ -28,6 +30,9 @@ public:
 	TSubclassOf<AFlashlight> FlashlightClass;
 	UPROPERTY(BlueprintReadOnly, category = Flashlight)
 	AFlashlight* Flashlight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ANPC_AIController* AIController;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -35,6 +40,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FFlashLightDelegate OnFlashlightToggled;
+	UPROPERTY(BlueprintAssignable)
+	FPlayerDied OnPlayerDeath;
 
 protected:
 	virtual void BeginPlay() override;
@@ -62,7 +69,7 @@ protected:
 	void InputJump(const FInputActionValue& Value);
 	void InputLook(const FInputActionValue& Value);
 	void InputSprint(const FInputActionValue& Value);
-
+	
 private:
 	//Så AI kan höra/se spelare
 	class UAIPerceptionStimuliSourceComponent* StimulusSource;
