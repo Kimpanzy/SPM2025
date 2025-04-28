@@ -1,13 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
+#include "Camera/CameraComponent.h"
 #include "Grabber.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemGrabbed, UStaticMeshComponent*, GrabbedItem);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemDropped, UStaticMeshComponent*, DroppedItem);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemGrabbed, AActor*, GrabbedItem);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FItemDropped, AActor*, DroppedItem);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 
@@ -24,15 +25,16 @@ protected:
 	
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
+
+	virtual void BeginPlay() override;
 	UFUNCTION(BlueprintCallable)
 	void Release();
 	UFUNCTION(BlueprintCallable)
 	void ReleaseAtPos(FVector Location, FRotator Rotation);
 	UFUNCTION(BlueprintCallable)
-	void Grab(UStaticMeshComponent* HitComponent);
+	void Grab(AActor* HitActor, FVector LocationOffset, FRotator RotationOffset);
 	UPROPERTY(BlueprintReadWrite)
-	UStaticMeshComponent* GrabbedActor;
+	AActor* GrabbedActor;
 	UPROPERTY(BlueprintAssignable)
 	FItemGrabbed ItemGrabbed;
 	UPROPERTY(BlueprintAssignable)
@@ -49,5 +51,10 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float HoldDistance = 100;
+
+	UCameraComponent* Camera;
+
+	FRotator RotationOffset;
+	FVector LocationOffset;
 
 };

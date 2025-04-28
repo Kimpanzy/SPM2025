@@ -3,7 +3,6 @@
 
 #include "Grabber.h"
 
-#include "Camera/CameraComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 
@@ -16,77 +15,141 @@ UGrabber::UGrabber()
 
 	
 }
+
+void UGrabber::BeginPlay()
+{
+	Super::BeginPlay();
+	Camera = GetOwner()->FindComponentByClass<UCameraComponent>();
+}
+
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (!GrabbedActor) return;
+	if (GrabbedActor)
+	{
 
+		FVector CameraLocation = Camera->GetComponentLocation();
+		FVector Forward = Camera->GetForwardVector();
+		FVector Right = Camera->GetRightVector();
+		FVector Up = Camera->GetUpVector();
+		
+		float ForwardDistance = 75.f;  
+		float RightOffset = -50.f;       
+		float UpOffset = -50.f;            
+		
+		FVector GrabLocation = CameraLocation 
+			+ Forward * (ForwardDistance + LocationOffset.X)
+			+ Right * (RightOffset + LocationOffset.Y)
+			+ Up * (UpOffset + LocationOffset.Z);
+
+		GrabbedActor->SetActorLocation(GrabLocation);
+		
+		FRotator CameraRot = Camera->GetComponentRotation();
+		GrabbedActor->SetActorRotation(CameraRot + RotationOffset);
+	}
 	
 }
 
 void UGrabber::Release()
 {
-	if (GrabbedActor)
-	{
-		FVector Location = GrabbedActor->GetComponentLocation();
-		FVector Extent = GrabbedActor->Bounds.BoxExtent;
+	if (!GrabbedActor) return;
+	
 
-		TArray<UPrimitiveComponent*> OverlappingComponents;
-		bool bIsOverlapping = UKismetSystemLibrary::BoxOverlapComponents(
-			GetWorld(),
-			Location,
-			Extent,
-			TArray<TEnumAsByte<EObjectTypeQuery>>{UEngineTypes::ConvertToObjectType(ECC_WorldStatic)},
-			UPrimitiveComponent::StaticClass(),
-			TArray<AActor*>{GetOwner(), GrabbedActor->GetOwner()},
-			OverlappingComponents
-		);
-		DrawDebugBox(GetWorld(), Location, Extent, FColor::Yellow, false, 0.1f);
-		if (bIsOverlapping)
-		{
-			return;
-		}
-		
-		GrabbedActor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		GrabbedActor->SetSimulatePhysics(true);
-		GrabbedActor->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		GrabbedActor->SetCollisionResponseToAllChannels(ECR_Block);
-		ItemDropped.Broadcast(GrabbedActor);
-		GrabbedActor = nullptr;
+	FVector Location = GrabbedActor->GetActorLocation();
+	FVector Extent = FVector(50.f, 50.f, 50.f); 
+
+	FBox ActorBounds = GrabbedActor->GetComponentsBoundingBox();
+	if (ActorBounds.IsValid)
+	{
+		Location = ActorBounds.GetCenter();
+		Extent = ActorBounds.GetExtent();
 	}
+
+	TArray<UPrimitiveComponent*> OverlappingComponents;
+	bool bIsOverlapping = UKismetSystemLibrary::BoxOverlapComponents(
+		GetWorld(),
+		Location,
+		Extent,
+		TArray<TEnumAsByte<EObjectTypeQuery>>{UEngineTypes::ConvertToObjectType(ECC_WorldStatic)},
+		UPrimitiveComponent::StaticClass(),
+		TArray<AActor*>{GetOwner(), GrabbedActor},
+		OverlappingComponents
+	);
+
+	DrawDebugBox(GetWorld(), Location, Extent, FColor::Yellow, false, 0.1f);
+
+	if (bIsOverlapping)
+	{
+		return; 
+	}
+	LocationOffset = FVector::ZeroVector;
+	RotationOffset = FRotator::ZeroRotator;
+	
+	GrabbedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	FRotator CurrentRotation = GrabbedActor->GetActorRotation();
+	GrabbedActor->SetActorRotation(FRotator(0.f, CurrentRotation.Yaw, 0.f));	
+	TArray<UPrimitiveComponent*> PrimitiveComponents;
+	GrabbedActor->GetComponents(PrimitiveComponents);
+
+	for (UPrimitiveComponent* Prim : PrimitiveComponents)
+	{
+		if (Prim)
+		{
+			Prim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			Prim->SetCollisionResponseToAllChannels(ECR_Block);
+			//Prim->SetSimulatePhysics(true);
+		}
+	}
+	ItemDropped.Broadcast(GrabbedActor);
+	GrabbedActor = nullptr;
 }
 
 void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation)
 {
-	if (GrabbedActor)
+	if (!GrabbedActor) return;
+
+	GrabbedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	
+	TArray<UPrimitiveComponent*> PrimitiveComponents;
+	GrabbedActor->GetComponents(PrimitiveComponents);
+	LocationOffset = FVector::ZeroVector;
+	RotationOffset = FRotator::ZeroRotator;
+	for (UPrimitiveComponent* Prim : PrimitiveComponents)
 	{
-		
-		
-		GrabbedActor->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		GrabbedActor->SetCollisionResponseToAllChannels(ECR_Block);
-		GrabbedActor->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		GrabbedActor->GetOwner()->SetActorLocationAndRotation(Location, Rotation);
-		ItemDropped.Broadcast(GrabbedActor);
-		GrabbedActor = nullptr;
+		if (Prim)
+		{
+			Prim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			Prim->SetCollisionResponseToAllChannels(ECR_Block);
+			//Prim->SetSimulatePhysics(true);
+		}
 	}
+
+	GrabbedActor->SetActorLocationAndRotation(Location, Rotation);
+
+	ItemDropped.Broadcast(GrabbedActor);
+	GrabbedActor = nullptr;
 }
 
 
-void UGrabber::Grab(UStaticMeshComponent* HitComponent)
+void UGrabber::Grab(AActor* HitActor, FVector ExtraLocationOffset, FRotator ExtraRotationOffset)
 {
-	HitComponent->SetSimulatePhysics(false);
-	HitComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	HitComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
-	AActor* Owner = GetOwner();
-	UCameraComponent* Camera = Owner->FindComponentByClass<UCameraComponent>();
-	FVector RelativeOffset(100.f, -50.f, -50.f);  // Forward, Left, Down from camera
-	FRotator OffsetRotation = FRotator::ZeroRotator;
+	if (!HitActor) return;
+	LocationOffset = ExtraLocationOffset;
+	RotationOffset = ExtraRotationOffset;
+	
+	TArray<UPrimitiveComponent*> PrimitiveComponents;
+	HitActor->GetComponents(PrimitiveComponents);
 
-	HitComponent->AttachToComponent(Camera, FAttachmentTransformRules::KeepRelativeTransform);
-	HitComponent->SetRelativeLocation(RelativeOffset);
-	HitComponent->SetRelativeRotation(OffsetRotation);
-	GrabbedActor = HitComponent;
+	for (auto* Prim : PrimitiveComponents)
+	{
+		if (Prim)
+		{
+			//Prim->SetSimulatePhysics(false);
+			Prim->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			Prim->SetCollisionResponseToAllChannels(ECR_Overlap);
+		}
+	}
+	GrabbedActor = HitActor;
 	ItemGrabbed.Broadcast(GrabbedActor);
-
 }
