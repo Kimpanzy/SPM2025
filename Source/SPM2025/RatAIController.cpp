@@ -3,6 +3,14 @@
 
 #include "RatAIController.h"
 
+#include "Kismet/GameplayStatics.h"
+
+void ARatAIController::BeginPlay()
+{
+	Super::BeginPlay();
+	Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
+	
+}
 TArray<FVector> ARatAIController::GetAllTargets()
 {
 	return  Targets;

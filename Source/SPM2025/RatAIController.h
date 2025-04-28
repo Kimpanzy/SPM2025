@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
+#include "PlayerCharacter.h"
 #include "RatAIController.generated.h"
 
 /**
@@ -16,6 +17,9 @@ class SPM2025_API ARatAIController : public AAIController
 
 
 public:
+
+	virtual void BeginPlay() override;
+	
 	UPROPERTY(BlueprintReadWrite)
 	TArray<FVector> Targets;
 
@@ -27,6 +31,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite)
 	bool bPlayerIsHoldingCheese;
+
+	APlayerCharacter* Player;
 	
 	TArray<FVector> GetAllTargets();
 
