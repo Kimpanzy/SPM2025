@@ -23,6 +23,7 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	//Hämta AI controller och AI
 	auto* const Cont = OwnerComp.GetAIOwner();
 	auto* const NPC = Cast<ANPC>(Cont->GetPawn());
+	
 
 	//Kollar så Ai har implementerat interfacet
 	if (auto* const icombat = Cast<ICombatInterface>(NPC))

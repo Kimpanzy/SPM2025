@@ -85,7 +85,11 @@ void ANPC_AIController::OnTargetDetection(AActor* Actor, FAIStimulus Stimulus)
 		GetBlackboardComponent()->SetValueAsBool("CanHearPlayer",Stimulus.WasSuccessfullySensed());
 		GetBlackboardComponent()->SetValueAsObject("TargetActor", player);
 	}
-	else
+	else if (Actor->ActorHasTag("Locker"))
+	{
+		FVector Location = Actor->GetActorLocation()+Actor->GetActorRightVector()*200+Actor->GetActorForwardVector()*20;
+		GetBlackboardComponent()->SetValueAsVector("SoundLocation", Location);
+	}else
 	{
 		GetBlackboardComponent()->SetValueAsVector("SoundLocation", Actor->GetActorLocation());
 	}

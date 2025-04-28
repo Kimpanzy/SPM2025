@@ -3,6 +3,9 @@
 
 #include "NPC.h"
 
+#include "Kismet/GameplayStatics.h"
+#include "LevelInstance/LevelInstanceTypes.h"
+
 // Sets default values
 ANPC::ANPC()
 {
@@ -15,6 +18,7 @@ ANPC::ANPC()
 void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
+	Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
 	
 }
 
@@ -54,6 +58,7 @@ UAnimMontage* ANPC::GetMontage() const
 
 int ANPC::MeleeAttack_Implementation()
 {
+	Player->OnPlayerDeath.Broadcast();
 	UE_LOG(LogTemp, Warning,TEXT("ATTACKING!"))
 	if (Montage)
 	{
