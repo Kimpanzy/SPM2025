@@ -36,7 +36,7 @@ void URequiemGameInstance::SaveGame(const bool Async)
 		FAsyncSaveGameToSlotDelegate OnSaveComplete;
 		OnSaveComplete.BindLambda([&](const FString&, const int32, const bool Success)
 		{
-			SavedGame.ExecuteIfBound(SaveGameInstance, Success);
+			SavedGame.Broadcast(SaveGameInstance, Success);
 		});
 
 		UGameplayStatics::AsyncSaveGameToSlot(
@@ -54,7 +54,7 @@ void URequiemGameInstance::SaveGame(const bool Async)
 			SaveGameInstance->GetUserIndex()
 		);
 
-		SavedGame.ExecuteIfBound(SaveGameInstance, Success);
+		SavedGame.Broadcast(SaveGameInstance, Success);
 	}
 }
 
@@ -68,7 +68,7 @@ void URequiemGameInstance::LoadGame(const bool Async, const FString& SlotName, c
 			OnLoaded.BindLambda([&](const FString&, const int32, USaveGame* SaveGame)
 			{
 				SaveGameInstance = Cast<URequiemSaveGame>(SaveGame);
-				LoadedGame.ExecuteIfBound(SaveGameInstance);
+				LoadedGame.Broadcast(SaveGameInstance);
 			});
 
 			UGameplayStatics::AsyncLoadGameFromSlot(SlotName, UserIndex, OnLoaded);
@@ -76,13 +76,13 @@ void URequiemGameInstance::LoadGame(const bool Async, const FString& SlotName, c
 		else
 		{
 			SaveGameInstance = Cast<URequiemSaveGame>(UGameplayStatics::LoadGameFromSlot(SlotName, UserIndex));
-			LoadedGame.ExecuteIfBound(SaveGameInstance);
+			LoadedGame.Broadcast(SaveGameInstance);
 		}
 	}
 	else
 	{
 		CreateSaveGame(SlotName, UserIndex);
-		LoadedGame.ExecuteIfBound(SaveGameInstance);
+		LoadedGame.Broadcast(SaveGameInstance);
 	}
 }
 

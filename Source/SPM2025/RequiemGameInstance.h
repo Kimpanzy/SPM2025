@@ -10,8 +10,9 @@
 class ISaveable;
 class URequiemSaveGame;
 
-DECLARE_DELEGATE_TwoParams(FSavedGameDelegate, URequiemSaveGame* SaveGameInstance, bool Success);
-DECLARE_DELEGATE_OneParam(FLoadGameDelegate, URequiemSaveGame* SaveGameInstance);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSavedGameDelegate, URequiemSaveGame*, SaveGameInstance, bool, Success);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLoadGameDelegate, URequiemSaveGame*, SaveGameInstance);
 
 UCLASS()
 class SPM2025_API URequiemGameInstance : public UGameInstance, public IPersistence
@@ -30,7 +31,10 @@ private:
 	void SaveGame(bool Async);
 
 public:
+	UPROPERTY(BlueprintAssignable)
 	FSavedGameDelegate SavedGame;
+
+	UPROPERTY(BlueprintAssignable)
 	FLoadGameDelegate LoadedGame;
 
 	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
