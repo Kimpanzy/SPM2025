@@ -27,6 +27,8 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm->SetupAttachment(RootComponent);
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
 	CameraComponent->SetupAttachment(SpringArm);
+	ArmSkeleton = CreateDefaultSubobject<USkeletalMeshComponent>("ArmSkeleton");
+	ArmSkeleton->SetupAttachment(SpringArm);
 	CameraComponent->bUsePawnControlRotation = false;
 	SpringArm->bUsePawnControlRotation = true;
 	SpringArm->bEnableCameraRotationLag = true;
@@ -50,8 +52,11 @@ void APlayerCharacter::BeginPlay()
 	//Attach flashlight till kameran
 	if (Flashlight)
 	{
-		Flashlight->AttachToComponent(CameraComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		Flashlight->SetActorRelativeLocation(FVector(30.0f, 0.0f, 10.0f));
+		Flashlight->AttachToComponent(ArmSkeleton,FAttachmentTransformRules::SnapToTargetNotIncludingScale,"hand_L");
+		//Flashlight->AttachToComponent(CameraComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		Flashlight->SetActorRelativeLocation(FVector(0.04, 0.06, 0.22));
+		Flashlight->SetActorRelativeRotation(FRotator(11,270,50));
+		Flashlight->SetActorRelativeScale3D(FVector(0.004));
 	}
 	Super::BeginPlay();
 }
@@ -87,6 +92,7 @@ void APlayerCharacter::InputMove(const FInputActionValue& Value)
 	AddMovementInput(ForwardDirection, MovementVector.Y);
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 	AddMovementInput(RightDirection,MovementVector.X);
+	
 }
 
 void InputSprint(const FInputActionValue& Value)

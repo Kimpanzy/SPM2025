@@ -35,7 +35,7 @@ public:
 	ANPC_AIController* AIController;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	
 	void ToggleFlashlight(const FInputActionValue& value);
 
 	UPROPERTY(BlueprintAssignable)
@@ -64,6 +64,8 @@ protected:
 	UCameraComponent* CameraComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USpringArmComponent* SpringArm;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USkeletalMeshComponent* ArmSkeleton;
 
 	void InputMove(const FInputActionValue& Value);
 	void InputJump(const FInputActionValue& Value);
