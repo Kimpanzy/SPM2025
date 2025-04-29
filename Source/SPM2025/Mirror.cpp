@@ -3,6 +3,9 @@
 
 #include "Mirror.h"
 
+#include "RequiemGameInstance.h"
+#include "RequiemSaveGame.h"
+
 AMirror::AMirror(): RotatingTo(), RotatingFrom()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,6 +24,8 @@ void AMirror::BeginPlay()
 	RotationUpdateEvent.BindDynamic(this, &AMirror::RotationUpdate);
 
 	RotationTimeline.AddInterpFloat(RotationCurve, RotationUpdateEvent);
+
+	URequiemGameInstance::Execute_RequestLoad(URequiemGameInstance::GetInstance(GetWorld()), this);
 }
 
 void AMirror::Tick(const float DeltaTime)
@@ -40,4 +45,22 @@ void AMirror::Rotate()
 	RotatingTo = RotatingFrom + RotationAngle;
 
 	RotationTimeline.PlayFromStart();
+}
+
+void AMirror::SaveData_Implementation(URequiemSaveGame* SaveGameInstance)
+{
+	SaveGameInstance->Mirrors.Add(
+		ID,
+		FMirrorSaveData{
+			RotationTimeline.IsPlaying() ? RotatingTo : GetActorRotation()
+		}
+	);
+}
+
+void AMirror::LoadData_Implementation(URequiemSaveGame* SaveGameInstance)
+{
+	if (const FMirrorSaveData* SaveData = SaveGameInstance->Mirrors.Find(ID))
+	{
+		SetActorRotation(SaveData->Rotation);
+	}
 }
