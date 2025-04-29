@@ -57,4 +57,6 @@ private:
 	FRotator RotationOffset;
 	FVector LocationOffset;
 
+	bool GrabbedActorHadPhysics;
+
 };

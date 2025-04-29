@@ -98,9 +98,13 @@ void UGrabber::Release()
 		{
 			Prim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			Prim->SetCollisionResponseToAllChannels(ECR_Block);
-			//Prim->SetSimulatePhysics(true);
+			if (GrabbedActorHadPhysics)
+			{
+				Prim->SetSimulatePhysics(true);
+			}
 		}
 	}
+	GrabbedActorHadPhysics = false;
 	ItemDropped.Broadcast(GrabbedActor);
 	GrabbedActor = nullptr;
 }
@@ -121,9 +125,13 @@ void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation)
 		{
 			Prim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			Prim->SetCollisionResponseToAllChannels(ECR_Block);
-			//Prim->SetSimulatePhysics(true);
+			if (GrabbedActorHadPhysics)
+			{
+				Prim->SetSimulatePhysics(true);
+			}
 		}
 	}
+	GrabbedActorHadPhysics = false;
 
 	GrabbedActor->SetActorLocationAndRotation(Location, Rotation);
 
@@ -141,11 +149,14 @@ void UGrabber::Grab(AActor* HitActor, FVector ExtraLocationOffset, FRotator Extr
 	TArray<UPrimitiveComponent*> PrimitiveComponents;
 	HitActor->GetComponents(PrimitiveComponents);
 
+	
+
 	for (auto* Prim : PrimitiveComponents)
 	{
+		GrabbedActorHadPhysics = Prim->IsSimulatingPhysics();
 		if (Prim)
 		{
-			//Prim->SetSimulatePhysics(false);
+			Prim->SetSimulatePhysics(false);
 			Prim->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			Prim->SetCollisionResponseToAllChannels(ECR_Overlap);
 		}
