@@ -44,6 +44,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Rotate();
 
+private:
 	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
 	void OnInteract_Implementation(FHitResult HitResult) override { Rotate(); }
 
