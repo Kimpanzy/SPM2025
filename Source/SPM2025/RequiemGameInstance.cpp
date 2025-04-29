@@ -8,9 +8,6 @@
 
 URequiemGameInstance::URequiemGameInstance()
 {
-#if WITH_EDITOR
-	LoadGame(false);
-#endif
 }
 
 URequiemGameInstance* URequiemGameInstance::GetInstance(const UObject* WorldContextObject)
