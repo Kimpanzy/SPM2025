@@ -37,17 +37,16 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FLoadGameDelegate LoadedGame;
 
+	UFUNCTION(BlueprintCallable)
+	void LoadGame(bool Async = false, const FString& SlotName = TEXT("Slot0"), int UserIndex = 0);
+
+	UFUNCTION(BlueprintCallable)
+	void CreateSaveGame(const FString& SlotName = TEXT("Slot0"), int UserIndex = 0);
+
+private:
 	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
 	void RequestSave_Implementation(bool Async) override;
 
 	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
 	void RequestLoad_Implementation(const TScriptInterface<ISaveable>& Saveable) override;
-
-	UFUNCTION(BlueprintCallable)
-	void LoadGame(bool Async);
-	void LoadGame(bool Async, const FString& SlotName, int UserIndex);
-
-	UFUNCTION(BlueprintCallable)
-	void CreateSaveGame();
-	void CreateSaveGame(const FString& SlotName, int UserIndex);
 };

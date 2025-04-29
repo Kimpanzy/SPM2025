@@ -86,11 +86,6 @@ void URequiemGameInstance::LoadGame(const bool Async, const FString& SlotName, c
 	}
 }
 
-void URequiemGameInstance::LoadGame(const bool Async)
-{
-	LoadGame(Async, TEXT("Slot0"), 0);
-}
-
 void URequiemGameInstance::RequestSave_Implementation(const bool Async)
 {
 	TArray<AActor*> Actors;
@@ -118,12 +113,7 @@ void URequiemGameInstance::RequestLoad_Implementation(const TScriptInterface<ISa
 
 void URequiemGameInstance::CreateSaveGame(const FString& SlotName, const int UserIndex)
 {
-	CreateSaveGame();
+	SaveGameInstance = Cast<URequiemSaveGame>(UGameplayStatics::CreateSaveGameObject(URequiemSaveGame::StaticClass()));
 	SaveGameInstance->SlotName = SlotName;
 	SaveGameInstance->UserIndex = UserIndex;
-}
-
-void URequiemGameInstance::CreateSaveGame()
-{
-	SaveGameInstance = Cast<URequiemSaveGame>(UGameplayStatics::CreateSaveGameObject(URequiemSaveGame::StaticClass()));
 }
