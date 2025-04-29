@@ -6,10 +6,6 @@
 #include "Saveable.h"
 #include "Kismet/GameplayStatics.h"
 
-URequiemGameInstance::URequiemGameInstance()
-{
-}
-
 URequiemGameInstance* URequiemGameInstance::GetInstance(const UObject* WorldContextObject)
 {
 	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(WorldContextObject);
@@ -24,7 +20,7 @@ URequiemGameInstance* URequiemGameInstance::GetInstance(const UObject* WorldCont
 	return StaticCast<URequiemGameInstance*>(GameInstance);
 }
 
-void URequiemGameInstance::SaveGame(const bool Async)
+void URequiemGameInstance::SaveGameToFile(const bool Async)
 {
 	if (!SaveGameInstance)
 	{
@@ -103,7 +99,8 @@ void URequiemGameInstance::RequestSave_Implementation(const bool Async)
 	}
 
 	SaveGameInstance->SaveAllData(SaveableActors);
-	SaveGame(Async);
+
+	SaveGameToFile(Async);
 }
 
 void URequiemGameInstance::RequestLoad_Implementation(const TScriptInterface<ISaveable>& Saveable)

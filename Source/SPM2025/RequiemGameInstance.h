@@ -20,15 +20,13 @@ class SPM2025_API URequiemGameInstance : public UGameInstance, public IPersisten
 	GENERATED_BODY()
 
 public:
-	URequiemGameInstance();
-
 	static URequiemGameInstance* GetInstance(const UObject* WorldContextObject);
 
 private:
 	UPROPERTY()
 	TObjectPtr<URequiemSaveGame> SaveGameInstance;
 
-	void SaveGame(bool Async);
+	void SaveGameToFile(bool Async);
 
 public:
 	UPROPERTY(BlueprintAssignable)
