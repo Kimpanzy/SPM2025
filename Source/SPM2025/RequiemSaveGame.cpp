@@ -4,9 +4,9 @@
 #include "RequiemSaveGame.h"
 #include "Saveable.h"
 
-void URequiemSaveGame::SaveDataFor(TScriptInterface<ISaveable>& SaveableActor)
+void URequiemSaveGame::SaveDataFor(const TScriptInterface<ISaveable>& SaveableActor)
 {
-	ISaveable::Execute_SaveData(SaveableActor.GetObjectRef(), this);
+	ISaveable::Execute_SaveData(SaveableActor.GetObject(), this);
 }
 
 void URequiemSaveGame::SaveAllData(const TArray<TScriptInterface<ISaveable>>& SaveableActors)
@@ -17,7 +17,7 @@ void URequiemSaveGame::SaveAllData(const TArray<TScriptInterface<ISaveable>>& Sa
 	}
 }
 
-void URequiemSaveGame::LoadDataFor(TScriptInterface<ISaveable> SaveableActor)
+void URequiemSaveGame::LoadDataFor(const TScriptInterface<ISaveable>& SaveableActor)
 {
-	ISaveable::Execute_LoadData(SaveableActor.GetObjectRef(), this);
+	ISaveable::Execute_LoadData(SaveableActor.GetObject(), this);
 }

@@ -32,8 +32,8 @@ public:
 	FString GetSlotName() const { return SlotName; }
 	int GetUserIndex() const { return UserIndex; }
 
-	void SaveDataFor(TScriptInterface<ISaveable>& SaveableActor);
+	void SaveDataFor(const TScriptInterface<ISaveable>& SaveableActor);
 	void SaveAllData(const TArray<TScriptInterface<ISaveable>>& SaveableActors);
 
-	void LoadDataFor(TScriptInterface<ISaveable> SaveableActor);
+	void LoadDataFor(const TScriptInterface<ISaveable>& SaveableActor);
 };
