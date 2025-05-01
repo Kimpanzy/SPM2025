@@ -40,7 +40,6 @@ EBTNodeResult::Type UBTT_SelectNodeAwayFromPlayer::ExecuteTask(UBehaviorTreeComp
 
     RatAICon->SetCurrentIndex(EscapeIndex);
     RatAICon->GetBlackboardComponent()->SetValueAsVector("CurrentTarget", Targets[EscapeIndex]);
-    
     return EBTNodeResult::Succeeded;
     
 }

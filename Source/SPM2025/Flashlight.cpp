@@ -4,6 +4,7 @@
 #include "Flashlight.h"
 
 #include "Components/SpotLightComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFlashlight::AFlashlight()
@@ -36,6 +37,7 @@ void AFlashlight::ToggleFlashlight()
 	}
 	bIsOn = !bIsOn;
 	FlickerLight(bIsOn);
+	UGameplayStatics::PlaySound2D(GetWorld(), ToggleFlashLightSFX);
 	if (bIsOn)
 	{
 		Flicker();

@@ -36,6 +36,9 @@ public:
 	void ToggleFlashlight();
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* ToggleFlashLightSFX;
+
 	UPROPERTY(BlueprintReadWrite)
 	bool bIsOn;
 	UPROPERTY(BlueprintReadWrite)

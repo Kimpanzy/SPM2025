@@ -32,6 +32,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool bPlayerIsHoldingCheese;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* RatSqueal;
+
 	APlayerCharacter* Player;
 	
 	TArray<FVector> GetAllTargets();
