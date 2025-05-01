@@ -9,6 +9,7 @@
 #include "PlayerCharacter.h"
 #include "Animation/AnimMontage.h"
 #include "GameFramework/Character.h"
+#include "Sound/SoundAttenuation.h"
 #include "NPC.generated.h"
 
 UCLASS()
@@ -31,7 +32,11 @@ public:
 	void SetPatrolPath(APatrolPath* path);
 
 	UAnimMontage* GetMontage() const;
+	
+	USoundBase* GetSound() const;
 
+	USoundAttenuation* GetSoundAttenuation() const;
+	
 	int MeleeAttack_Implementation() override;
 protected:
 	// Called when the game starts or when spawned
@@ -48,4 +53,8 @@ private:
 	UAnimMontage* Montage;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player", meta = (AllowPrivateAccess = "true"))
 	APlayerCharacter* Player;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	USoundBase* Sound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	USoundAttenuation* ATTSound;
 };

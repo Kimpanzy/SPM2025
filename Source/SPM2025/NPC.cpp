@@ -56,6 +56,16 @@ UAnimMontage* ANPC::GetMontage() const
 	return Montage;
 }
 
+USoundBase* ANPC::GetSound() const
+{
+	return Sound;
+}
+
+USoundAttenuation* ANPC::GetSoundAttenuation() const
+{
+	return ATTSound;
+}
+
 int ANPC::MeleeAttack_Implementation()
 {
 	Player->OnPlayerDeath.Broadcast();
