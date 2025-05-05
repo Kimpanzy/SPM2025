@@ -17,5 +17,10 @@ bool UBTD_CanSeeCheese::CalculateRawConditionValue(UBehaviorTreeComponent& Owner
 	{
 		return false;
 	}
-	return RatAICon->GetPawn()->GetDistanceTo(RatAICon->GetCheese()) < 1000 && !RatAICon->bPlayerIsHoldingCheese &&RatAICon->LineOfSightTo(RatAICon->GetCheese()) ;
+	int range = 1000; 
+	if (RatAICon->bPlayerIsHoldingCheese)
+	{
+		range = 300;
+	}
+	return RatAICon->GetPawn()->GetDistanceTo(RatAICon->GetCheese()) < range &&RatAICon->LineOfSightTo(RatAICon->GetCheese());
 } 
