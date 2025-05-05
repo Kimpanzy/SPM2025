@@ -30,13 +30,16 @@ public:
 	TSubclassOf<AFlashlight> FlashlightClass;
 	UPROPERTY(BlueprintReadOnly, category = Flashlight)
 	AFlashlight* Flashlight;
-
+	UPROPERTY(BlueprintReadOnly, category = Highlight)
+	AActor* LastHighlightedActor = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ANPC_AIController* AIController;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	void ToggleFlashlight(const FInputActionValue& value);
+
+	void RaycastHighligh();
 
 	UPROPERTY(BlueprintAssignable)
 	FFlashLightDelegate OnFlashlightToggled;
@@ -77,8 +80,4 @@ private:
 	class UAIPerceptionStimuliSourceComponent* StimulusSource;
 
 	void SetupStimulusSource();
-	
-	
-	
-
 };
