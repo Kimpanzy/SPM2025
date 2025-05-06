@@ -79,11 +79,13 @@ void ANPC_AIController::SetupPerceptionSystem()
 
 void ANPC_AIController::OnTargetDetection(AActor* Actor, FAIStimulus Stimulus)
 {
-	if (auto* const player = Cast<APlayerCharacter>(Actor))
+	
+	
+	if (auto* const Player = Cast<APlayerCharacter>(Actor))
 	{
 		//GetBlackboardComponent()->SetValueAsBool("CanSeePlayer",Stimulus.WasSuccessfullySensed());
 		GetBlackboardComponent()->SetValueAsBool("CanHearPlayer",Stimulus.WasSuccessfullySensed());
-		GetBlackboardComponent()->SetValueAsObject("TargetActor", player);
+		GetBlackboardComponent()->SetValueAsObject("TargetActor", Player);
 	}
 	else if (Actor->ActorHasTag("Locker"))
 	{

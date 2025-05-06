@@ -34,6 +34,8 @@ public:
 	AActor* LastHighlightedActor = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ANPC_AIController* AIController;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsHiding;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
