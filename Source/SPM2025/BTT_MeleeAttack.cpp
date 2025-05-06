@@ -33,7 +33,7 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 
 	//Avlusta med success
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
-	return EBTNodeResult::Type();
+	return EBTNodeResult::Succeeded;
 }
 
 bool UBTT_MeleeAttack::MontageHasFinished(ANPC* const NPC)
