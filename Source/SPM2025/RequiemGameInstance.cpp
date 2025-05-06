@@ -105,7 +105,10 @@ void URequiemGameInstance::RequestSave_Implementation(const bool Async)
 
 void URequiemGameInstance::RequestLoad_Implementation(const TScriptInterface<ISaveable>& Saveable)
 {
-	SaveGameInstance->LoadDataFor(Saveable);
+	if (SaveGameInstance)
+	{
+		SaveGameInstance->LoadDataFor(Saveable);
+	}
 }
 
 void URequiemGameInstance::CreateSaveGame(const FString& SlotName, const int UserIndex)

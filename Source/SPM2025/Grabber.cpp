@@ -55,15 +55,28 @@ void UGrabber::Release()
 {
 	if (!GrabbedActor) return;
 	
-
+	
+	
 	FVector Location = GrabbedActor->GetActorLocation();
-	FVector Extent = FVector(50.f, 50.f, 50.f); 
+	FVector Extent = FVector(50.f, 50.f, 50.f);
 
-	FBox ActorBounds = GrabbedActor->GetComponentsBoundingBox();
-	if (ActorBounds.IsValid)
+	// Compute bounds using only static mesh components
+	FBox StaticMeshBounds(ForceInit);
+	TArray<UStaticMeshComponent*> StaticMeshComponents;
+	GrabbedActor->GetComponents<UStaticMeshComponent>(StaticMeshComponents);
+
+	for (UStaticMeshComponent* Comp : StaticMeshComponents)
 	{
-		Location = ActorBounds.GetCenter();
-		Extent = ActorBounds.GetExtent();
+		if (Comp->IsRegistered())
+		{
+			StaticMeshBounds += Comp->Bounds.GetBox();
+		}
+	}
+
+	if (StaticMeshBounds.IsValid)
+	{
+		Location = StaticMeshBounds.GetCenter();
+		Extent = StaticMeshBounds.GetExtent();
 	}
 
 	TArray<UPrimitiveComponent*> OverlappingComponents;
@@ -71,17 +84,18 @@ void UGrabber::Release()
 		GetWorld(),
 		Location,
 		Extent,
-		TArray<TEnumAsByte<EObjectTypeQuery>>{UEngineTypes::ConvertToObjectType(ECC_WorldStatic)},
+		TArray<TEnumAsByte<EObjectTypeQuery>>{ UEngineTypes::ConvertToObjectType(ECC_WorldStatic) },
 		UPrimitiveComponent::StaticClass(),
-		TArray<AActor*>{GetOwner(), GrabbedActor},
+		TArray<AActor*>{ GetOwner(), GrabbedActor },
 		OverlappingComponents
 	);
 
+	// Visual debug
 	DrawDebugBox(GetWorld(), Location, Extent, FColor::Yellow, false, 0.1f);
 
 	if (bIsOverlapping)
 	{
-		return; 
+		return;
 	}
 	LocationOffset = FVector::ZeroVector;
 	RotationOffset = FRotator::ZeroRotator;
@@ -98,6 +112,7 @@ void UGrabber::Release()
 		{
 			Prim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			Prim->SetCollisionResponseToAllChannels(ECR_Block);
+			Prim->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 			if (GrabbedActorHadPhysics)
 			{
 				Prim->SetSimulatePhysics(true);
@@ -125,6 +140,7 @@ void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation)
 		{
 			Prim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			Prim->SetCollisionResponseToAllChannels(ECR_Block);
+			Prim->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 			if (GrabbedActorHadPhysics)
 			{
 				Prim->SetSimulatePhysics(true);
@@ -159,6 +175,7 @@ void UGrabber::Grab(AActor* HitActor, FVector ExtraLocationOffset, FRotator Extr
 			Prim->SetSimulatePhysics(false);
 			Prim->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			Prim->SetCollisionResponseToAllChannels(ECR_Overlap);
+			
 		}
 	}
 	GrabbedActor = HitActor;

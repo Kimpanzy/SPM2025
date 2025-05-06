@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "RequiemSaveGame.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -62,6 +63,8 @@ void APlayerCharacter::BeginPlay()
 		Flashlight->SetActorRelativeScale3D(FVector(0.004));
 	}
 	Super::BeginPlay();
+
+	URequiemGameInstance::Execute_RequestLoad(URequiemGameInstance::GetInstance(GetWorld()), this);
 }
 
 // Called every frame
@@ -123,6 +126,20 @@ void APlayerCharacter::SetupStimulusSource()
 		StimulusSource->RegisterWithPerceptionSystem();
 		
 	}
+}
+
+void APlayerCharacter::SaveData_Implementation(URequiemSaveGame* SaveGameInstance)
+{
+	SaveGameInstance->PlayerSaveData = FPlayerSaveData{
+		GetActorLocation(),
+		GetActorRotation()
+	};
+}
+
+void APlayerCharacter::LoadData_Implementation(URequiemSaveGame* SaveGameInstance)
+{
+	SetActorLocation(SaveGameInstance->PlayerSaveData.Position);
+	GetController()->SetControlRotation(SaveGameInstance->PlayerSaveData.Rotation);
 }
 
 void APlayerCharacter::ToggleFlashlight(const FInputActionValue& Value)

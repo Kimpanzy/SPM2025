@@ -3,12 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Saveable.h"
 #include "Components/TimelineComponent.h"
 #include "GameFramework/Actor.h"
 #include "PushableBlock.generated.h"
 
 UCLASS()
-class SPM2025_API APushableBlock : public AActor
+class SPM2025_API APushableBlock : public AActor, public ISaveable
 {
 	GENERATED_BODY()
 
@@ -43,10 +44,29 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	UPROPERTY(VisibleAnywhere)
+	FGuid ID = FGuid::NewGuid();
+
 	virtual void Tick(const float DeltaTime) override;
 
 	UFUNCTION()
 	void OnActorHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 
 	bool IsBeingPushed() const { return PushingTimeline.IsPlaying(); }
+
+private:
+	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
+	void SaveData_Implementation(URequiemSaveGame* SaveGameInstance) override;
+
+	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
+	void LoadData_Implementation(URequiemSaveGame* SaveGameInstance) override;
+};
+
+USTRUCT()
+struct SPM2025_API FPushableBlockSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere)
+	FVector Position;
 };
