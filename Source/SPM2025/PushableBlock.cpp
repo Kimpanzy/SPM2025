@@ -2,6 +2,9 @@
 
 
 #include "PushableBlock.h"
+
+#include "RequiemGameInstance.h"
+#include "RequiemSaveGame.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -47,6 +50,8 @@ void APushableBlock::BeginPlay()
 		       TEXT("Unassigned Pushable Block Mesh, It will be unmoveable! Define one in BeginPlay!!"));
 	}
 #endif
+
+	URequiemGameInstance::Execute_RequestLoad(URequiemGameInstance::GetInstance(GetWorld()), this);
 }
 
 void APushableBlock::Tick(const float DeltaTime)
@@ -85,6 +90,22 @@ void APushableBlock::OnActorHit(AActor* SelfActor, AActor* OtherActor, FVector N
 	}
 
 	Push(PushingCharacter, RoundedPushingDirection);
+}
+
+void APushableBlock::SaveData_Implementation(URequiemSaveGame* SaveGameInstance)
+{
+	SaveGameInstance->PushableBlocks.Add(
+		ID,
+		FPushableBlockSaveData{IsBeingPushed() ? PushingFrom : GetActorLocation()}
+	);
+}
+
+void APushableBlock::LoadData_Implementation(URequiemSaveGame* SaveGameInstance)
+{
+	if (const FPushableBlockSaveData* SaveData = SaveGameInstance->PushableBlocks.Find(ID))
+	{
+		SetActorLocation(SaveData->Position);
+	}
 }
 
 bool APushableBlock::CanPush(const ACharacter* Who, const FVector& Direction) const

@@ -25,7 +25,7 @@ void AMirror::BeginPlay()
 
 	RotationTimeline.AddInterpFloat(RotationCurve, RotationUpdateEvent);
 
-	//URequiemGameInstance::Execute_RequestLoad(URequiemGameInstance::GetInstance(GetWorld()), this);
+	URequiemGameInstance::Execute_RequestLoad(URequiemGameInstance::GetInstance(GetWorld()), this);
 }
 
 void AMirror::Tick(const float DeltaTime)
