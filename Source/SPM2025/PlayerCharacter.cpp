@@ -34,7 +34,6 @@ APlayerCharacter::APlayerCharacter()
 	SpringArm->bEnableCameraRotationLag = true;
 	SpringArm->CameraRotationLagSpeed = 1.0f;
 	SetupStimulusSource();
-	
 }
 
 // Called when the game starts or when spawned
@@ -65,6 +64,7 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	RaycastHighligh();
 
 }
 
@@ -125,5 +125,40 @@ void APlayerCharacter::ToggleFlashlight(const FInputActionValue& Value)
 {
 	OnFlashlightToggled.Broadcast();
 	Flashlight->ToggleFlashlight();
+}
+
+void APlayerCharacter::RaycastHighligh()
+{
+	FVector Start = CameraComponent->GetComponentLocation();
+	FVector Forward = CameraComponent->GetForwardVector();
+	FVector End = Start + (Forward * 250.f);
+
+	FHitResult Hit;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, QueryParams);
+
+	if (LastHighlightedActor && LastHighlightedActor != Hit.GetActor())
+	{
+		TArray<UStaticMeshComponent*> PrevMeshComponents;
+		LastHighlightedActor->GetComponents<UStaticMeshComponent>(PrevMeshComponents);
+		for (auto* Comp : PrevMeshComponents)
+		{
+			Comp->SetRenderCustomDepth(false);
+		}
+		LastHighlightedActor = nullptr;
+	}
+
+	if (bHit && Hit.GetActor() && Hit.GetActor()->ActorHasTag("Highlight"))
+	{
+		LastHighlightedActor = Hit.GetActor();
+		TArray<UStaticMeshComponent*> MeshComponents;
+		Hit.GetActor()->GetComponents<UStaticMeshComponent>(MeshComponents);
+		for (auto* MeshComp : MeshComponents)
+		{
+			MeshComp->SetRenderCustomDepth(true);
+		}
+	}
 }
 
