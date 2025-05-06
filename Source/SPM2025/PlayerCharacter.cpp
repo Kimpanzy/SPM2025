@@ -25,14 +25,18 @@ APlayerCharacter::APlayerCharacter()
 	}
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("Spring Arm");
 	SpringArm->SetupAttachment(RootComponent);
+	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
 	CameraComponent->SetupAttachment(SpringArm);
+	
 	ArmSkeleton = CreateDefaultSubobject<USkeletalMeshComponent>("ArmSkeleton");
 	ArmSkeleton->SetupAttachment(SpringArm);
+	
 	CameraComponent->bUsePawnControlRotation = false;
 	SpringArm->bUsePawnControlRotation = true;
 	SpringArm->bEnableCameraRotationLag = true;
 	SpringArm->CameraRotationLagSpeed = 1.0f;
+	
 	SetupStimulusSource();
 }
 
