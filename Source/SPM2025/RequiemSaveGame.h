@@ -6,6 +6,7 @@
 #include "RequiemGameInstance.h"
 #include "GameFramework/SaveGame.h"
 #include "Mirror.h"
+#include "PlayerCharacter.h"
 #include "PushableBlock.h"
 #include "RequiemSaveGame.generated.h"
 
@@ -22,6 +23,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	TMap<FGuid, FPushableBlockSaveData> PushableBlocks;
+
+	UPROPERTY(VisibleAnywhere)
+	FPlayerSaveData PlayerSaveData;
 
 private:
 	friend void URequiemGameInstance::CreateSaveGame(const FString& SlotName, int UserIndex);
