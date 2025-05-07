@@ -61,7 +61,7 @@ void ANPC_AIController::SetupPerceptionSystem()
 		
 		HearingConfig->HearingRange = 1000.0f;
 
-		HearingConfig->SetMaxAge(1.f);
+		HearingConfig->SetMaxAge(.5f);
 		HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
 		HearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
 		HearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
@@ -91,6 +91,7 @@ void ANPC_AIController::OnTargetDetection(AActor* Actor, FAIStimulus Stimulus)
 	{
 		FVector Location = Actor->GetActorLocation()+Actor->GetActorRightVector()*200+Actor->GetActorForwardVector()*20;
 		GetBlackboardComponent()->SetValueAsVector("SoundLocation", Location);
+		GetBlackboardComponent()->SetValueAsBool("IsHiding",true);
 	}else
 	{
 		GetBlackboardComponent()->SetValueAsVector("SoundLocation", Actor->GetActorLocation());
