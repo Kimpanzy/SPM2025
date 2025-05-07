@@ -6,6 +6,8 @@
 #include "RequiemGameInstance.h"
 #include "GameFramework/SaveGame.h"
 #include "Mirror.h"
+#include "PlayerCharacter.h"
+#include "PushableBlock.h"
 #include "RequiemSaveGame.generated.h"
 
 class ISaveable;
@@ -18,6 +20,12 @@ class SPM2025_API URequiemSaveGame : public USaveGame
 public:
 	UPROPERTY(VisibleAnywhere)
 	TMap<FGuid, FMirrorSaveData> Mirrors;
+
+	UPROPERTY(VisibleAnywhere)
+	TMap<FGuid, FPushableBlockSaveData> PushableBlocks;
+
+	UPROPERTY(VisibleAnywhere)
+	FPlayerSaveData PlayerSaveData;
 
 private:
 	friend void URequiemGameInstance::CreateSaveGame(const FString& SlotName, int UserIndex);

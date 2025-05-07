@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "NPC_AIController.h"
+#include "Saveable.h"
 #include "PlayerCharacter.generated.h"
 
 class USpringArmComponent;
@@ -18,7 +19,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFlashLightDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDied);
 
 UCLASS()
-class SPM2025_API APlayerCharacter : public ACharacter
+class SPM2025_API APlayerCharacter : public ACharacter, public ISaveable
 {
 	GENERATED_BODY()
 
@@ -34,6 +35,8 @@ public:
 	AActor* LastHighlightedActor = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ANPC_AIController* AIController;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsHiding;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
@@ -80,4 +83,22 @@ private:
 	class UAIPerceptionStimuliSourceComponent* StimulusSource;
 
 	void SetupStimulusSource();
+
+	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
+	void SaveData_Implementation(URequiemSaveGame* SaveGameInstance) override;
+
+	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
+	void LoadData_Implementation(URequiemSaveGame* SaveGameInstance) override;
+};
+
+USTRUCT()
+struct SPM2025_API FPlayerSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere)
+	FVector Position;
+
+	UPROPERTY(VisibleAnywhere)
+	FRotator Rotation;
 };
