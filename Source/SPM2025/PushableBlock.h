@@ -17,7 +17,8 @@ public:
 	APushableBlock();
 
 private:
-	FTimeline PushingTimeline;
+	bool bIsPushingEnabled = true;
+	FTimeline MovingTimeline;
 	FVector PushingDirection = FVector::ZeroVector;
 	FVector PushingFrom = FVector::ZeroVector;
 	TWeakObjectPtr<ACharacter> Pusher;
@@ -35,10 +36,10 @@ private:
 	void Push(ACharacter* Who, const FVector& Direction);
 
 	UFUNCTION()
-	void PushingUpdate(const float Alpha);
+	void MovingUpdate(const float Alpha);
 
 	UFUNCTION()
-	void PushingFinished();
+	void MovingFinished();
 
 protected:
 	virtual void BeginPlay() override;
@@ -52,7 +53,7 @@ public:
 	UFUNCTION()
 	void OnActorHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 
-	bool IsBeingPushed() const { return PushingTimeline.IsPlaying(); }
+	bool IsBeingPushed() const { return MovingTimeline.IsPlaying(); }
 
 private:
 	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface

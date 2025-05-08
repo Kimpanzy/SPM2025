@@ -3,6 +3,7 @@
 
 #include "PushableBlock.h"
 
+#include "PushPuzzleGoal.h"
 #include "RequiemGameInstance.h"
 #include "RequiemSaveGame.h"
 #include "GameFramework/Character.h"
@@ -13,13 +14,18 @@ APushableBlock::APushableBlock()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void APushableBlock::PushingUpdate(const float Alpha)
+void APushableBlock::MovingUpdate(const float Alpha)
 {
 	SetActorRelativeLocation(PushingDirection * PushLength * Alpha + PushingFrom);
 }
 
-void APushableBlock::PushingFinished()
+void APushableBlock::MovingFinished()
 {
+	if (!bIsPushingEnabled)
+	{
+		return;
+	}
+
 	if (Pusher.IsValid() && Pusher->IsValidLowLevel())
 	{
 		Pusher->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
@@ -27,6 +33,28 @@ void APushableBlock::PushingFinished()
 	}
 
 	Pusher.Reset();
+
+	const FVector ActorLocation = GetActorLocation();
+
+	const FCollisionObjectQueryParams CollisionObjectParams(
+		ECC_TO_BITFIELD(ECC_WorldStatic) | ECC_TO_BITFIELD(ECC_WorldDynamic));
+
+	FHitResult HitResult;
+	GetWorld()->LineTraceSingleByObjectType(HitResult,
+	                                        ActorLocation,
+	                                        FVector::DownVector * PushLength + ActorLocation,
+	                                        CollisionObjectParams
+	);
+
+	if (APushPuzzleGoal* HitGoal = Cast<APushPuzzleGoal>(HitResult.GetActor()))
+	{
+		HitGoal->Complete();
+
+		bIsPushingEnabled = false;
+		PushingFrom = ActorLocation;
+		PushingDirection = FVector::DownVector;
+		MovingTimeline.PlayFromStart();
+	}
 }
 
 void APushableBlock::BeginPlay()
@@ -36,12 +64,12 @@ void APushableBlock::BeginPlay()
 	Super::OnActorHit.AddDynamic(this, &APushableBlock::OnActorHit);
 
 	FOnTimelineFloat PushingUpdateEvent;
-	PushingUpdateEvent.BindDynamic(this, &APushableBlock::PushingUpdate);
-	PushingTimeline.AddInterpFloat(PushingCurve, PushingUpdateEvent);
+	PushingUpdateEvent.BindDynamic(this, &APushableBlock::MovingUpdate);
+	MovingTimeline.AddInterpFloat(PushingCurve, PushingUpdateEvent);
 
 	FOnTimelineEvent PushingFinishEvent;
-	PushingFinishEvent.BindDynamic(this, &APushableBlock::PushingFinished);
-	PushingTimeline.SetTimelineFinishedFunc(PushingFinishEvent);
+	PushingFinishEvent.BindDynamic(this, &APushableBlock::MovingFinished);
+	MovingTimeline.SetTimelineFinishedFunc(PushingFinishEvent);
 
 #if WITH_EDITOR
 	if (!CubeMesh)
@@ -57,11 +85,16 @@ void APushableBlock::BeginPlay()
 void APushableBlock::Tick(const float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	PushingTimeline.TickTimeline(DeltaTime);
+	MovingTimeline.TickTimeline(DeltaTime);
 }
 
 void APushableBlock::OnActorHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
 {
+	if (!bIsPushingEnabled)
+	{
+		return;
+	}
+
 	const FVector PusherForwardVector = OtherActor->GetActorForwardVector();
 	const FVector RoundedPushingDirection = FVector(
 		FMath::RoundToDouble(PusherForwardVector.X),
@@ -112,6 +145,7 @@ bool APushableBlock::CanPush(const ACharacter* Who, const FVector& Direction) co
 {
 	if (
 		const UCharacterMovementComponent* PusherMovementComponent = Who->GetCharacterMovement();
+		!bIsPushingEnabled ||
 		!CubeMesh ||
 		PusherMovementComponent->MovementMode == MOVE_None ||
 		!PusherMovementComponent->IsMovingOnGround() ||
@@ -163,7 +197,7 @@ bool APushableBlock::CanPush(const ACharacter* Who, const FVector& Direction) co
 			MeshRotation,
 			FColor::Red,
 			false,
-			PushingTimeline.GetScaledTimelineLength()
+			MovingTimeline.GetScaledTimelineLength()
 		);
 
 		CurrentDebugDrawPosition += Direction * BoxLength;
@@ -181,5 +215,5 @@ void APushableBlock::Push(ACharacter* Who, const FVector& Direction)
 	Pusher = Who;
 	PushingDirection = Direction;
 	PushingFrom = GetActorLocation();
-	PushingTimeline.PlayFromStart();
+	MovingTimeline.PlayFromStart();
 }
