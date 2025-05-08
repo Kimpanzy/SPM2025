@@ -46,6 +46,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FFlashLightDelegate OnFlashlightToggled;
+	
 	UPROPERTY(BlueprintAssignable)
 	FPlayerDied OnPlayerDeath;
 

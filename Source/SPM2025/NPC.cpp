@@ -68,11 +68,17 @@ USoundAttenuation* ANPC::GetSoundAttenuation() const
 
 int ANPC::MeleeAttack_Implementation()
 {
-	Player->OnPlayerDeath.Broadcast();
-	UE_LOG(LogTemp, Warning,TEXT("ATTACKING!"))
-	if (Montage)
+	if (Player)
 	{
-		PlayAnimMontage(Montage);
+		Player->OnPlayerDeath.Broadcast();
+			
+		UE_LOG(LogTemp, Warning,TEXT("ATTACKING!"));
+		
+		if (Montage)
+		{
+			PlayAnimMontage(Montage);
+		}
+		
 	}
 	return 0;
 }
