@@ -124,7 +124,7 @@ void UGrabber::Release()
 	GrabbedActor = nullptr;
 }
 
-void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation)
+void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation, bool DisablePhysics)
 {
 	if (!GrabbedActor) return;
 
@@ -141,7 +141,7 @@ void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation)
 			Prim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			Prim->SetCollisionResponseToAllChannels(ECR_Block);
 			Prim->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-			if (GrabbedActorHadPhysics)
+			if (GrabbedActorHadPhysics && !DisablePhysics)
 			{
 				Prim->SetSimulatePhysics(true);
 			}
