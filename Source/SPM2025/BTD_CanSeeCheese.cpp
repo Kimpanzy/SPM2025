@@ -13,14 +13,18 @@ UBTD_CanSeeCheese::UBTD_CanSeeCheese()
 bool UBTD_CanSeeCheese::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const
 {
 	ARatAIController* RatAICon = Cast<ARatAIController>(OwnerComp.GetAIOwner());
+	
 	if (!RatAICon)
 	{
 		return false;
 	}
-	int range = 1000; 
-	if (RatAICon->bPlayerIsHoldingCheese)
+
+	const APawn* Rat = RatAICon->GetPawn();
+	if(!Rat)
 	{
-		range = 300;
+		return false;
 	}
-	return RatAICon->GetPawn()->GetDistanceTo(RatAICon->GetCheese()) < range &&RatAICon->LineOfSightTo(RatAICon->GetCheese());
-} 
+
+	const int Range = RatAICon->bPlayerIsHoldingCheese ? 1000 : 300; 
+	return Rat->GetDistanceTo(RatAICon->GetCheese()) < Range && RatAICon->LineOfSightTo(RatAICon->GetCheese());
+}
