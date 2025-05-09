@@ -25,6 +25,6 @@ bool UBTD_CanSeeCheese::CalculateRawConditionValue(UBehaviorTreeComponent& Owner
 		return false;
 	}
 
-	const int Range = RatAICon->bPlayerIsHoldingCheese ? 1000 : 300; 
+	const int Range = RatAICon->bPlayerIsHoldingCheese ? 300 : 1000;
 	return Rat->GetDistanceTo(RatAICon->GetCheese()) < Range && RatAICon->LineOfSightTo(RatAICon->GetCheese());
 }
