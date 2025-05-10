@@ -38,13 +38,15 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		float RightOffset = -50.f;       
 		float UpOffset = -50.f;            
 		
-		FVector GrabLocation = CameraLocation 
-			+ Forward * (ForwardDistance + LocationOffset.X)
-			+ Right * (RightOffset + LocationOffset.Y)
-			+ Up * (UpOffset + LocationOffset.Z);
+		FVector TargetLocation = CameraLocation 
+	+ Forward * (ForwardDistance + LocationOffset.X)
+	+ Right * (RightOffset + LocationOffset.Y)
+	+ Up * (UpOffset + LocationOffset.Z);
 
-		GrabbedActor->SetActorLocation(GrabLocation);
-		
+		FVector CurrentLocation = GrabbedActor->GetActorLocation();
+		FVector SmoothLocation = FMath::VInterpTo(CurrentLocation, TargetLocation, DeltaTime, 18.5f); 
+		GrabbedActor->SetActorLocation(SmoothLocation);
+
 		FRotator CameraRot = Camera->GetComponentRotation();
 		GrabbedActor->SetActorRotation(CameraRot + RotationOffset);
 	}
@@ -126,7 +128,7 @@ void UGrabber::Release()
 
 void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation, bool DisablePhysics)
 {
-	if (!GrabbedActor) return;
+	if (!GrabbedActor ) return;
 
 	GrabbedActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	
