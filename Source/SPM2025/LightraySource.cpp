@@ -32,15 +32,15 @@ void ALightraySource::CastLightrayFrom(FVector Source, FVector Direction)
 
 	FCollisionQueryParams QueryParams = FCollisionQueryParams::DefaultQueryParam;
 
-	AActor* HitMirror = nullptr;
+	AActor* PreviousHit = nullptr;
 	for (int i = 0; i < MaxBounces; ++i)
 	{
 		const FVector End = Source + Direction * RayLength;
 
 		QueryParams.ClearIgnoredSourceObjects();
-		if (HitMirror)
+		if (PreviousHit)
 		{
-			QueryParams.AddIgnoredSourceObject(HitMirror);
+			QueryParams.AddIgnoredSourceObject(PreviousHit);
 		}
 
 		if (
@@ -59,34 +59,16 @@ void ALightraySource::CastLightrayFrom(FVector Source, FVector Direction)
 			DrawDebugLine(GetWorld(), HitResult.ImpactPoint, End, {0, 255, 0}, false, TICK_RATE);
 #endif
 
-			AActor* HitActor = HitResult.GetActor();
-			if (HitResult.GetActor()->IsA(AMirror::StaticClass()))
+			if (
+				const AActor* HitActor = PreviousHit = HitResult.GetActor();
+				HitActor->IsA(AMirror::StaticClass())
+			)
 			{
-				HitMirror = HitActor;
 				Source = HitResult.ImpactPoint;
 				Direction = HitResult.ImpactNormal;
 			}
 			else
 			{
-				if (
-					const bool PreviousTargetValid = LastHitTarget.IsValid() && LastHitTarget->IsValidLowLevel();
-					!PreviousTargetValid || LastHitTarget.Get() != HitActor
-				)
-				{
-					if (PreviousTargetValid)
-					{
-						ILightrayTarget::Execute_OnRayStopHitting(LastHitTarget.Get());
-						LastHitTarget.Reset();
-					}
-
-					// Cast does not work for Blueprint implementations!
-					if (HitActor->Implements<ULightrayTarget>())
-					{
-						LastHitTarget = HitActor;
-						ILightrayTarget::Execute_OnRayHit(HitActor);
-					}
-				}
-
 				// Exit early if not bouncing on mirror
 				break;
 			}
@@ -97,5 +79,24 @@ void ALightraySource::CastLightrayFrom(FVector Source, FVector Direction)
 			DrawDebugLine(GetWorld(), Source, End, {255, 0, 0}, false, TICK_RATE);
 		}
 #endif
+	}
+
+	if (
+		const bool PreviousTargetValid = LastHitTarget.IsValid() && LastHitTarget->IsValidLowLevel();
+		!PreviousTargetValid || LastHitTarget.Get() != PreviousHit
+	)
+	{
+		if (PreviousTargetValid)
+		{
+			ILightrayTarget::Execute_OnRayStopHitting(LastHitTarget.Get());
+			LastHitTarget.Reset();
+		}
+
+		// Cast does not work for Blueprint implementations!
+		if (PreviousHit && PreviousHit->Implements<ULightrayTarget>())
+		{
+			LastHitTarget = PreviousHit;
+			ILightrayTarget::Execute_OnRayHit(PreviousHit);
+		}
 	}
 }
