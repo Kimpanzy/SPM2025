@@ -71,11 +71,6 @@ void ANPC::SetPatrolPath(APatrolPath* path)
 	PatrolPath = path;
 }
 
-UAnimMontage* ANPC::GetMontage() const
-{
-	return Montage;
-}
-
 USoundBase* ANPC::GetSound() const
 {
 	return Sound;
@@ -96,23 +91,9 @@ int ANPC::MeleeAttack_Implementation()
 {
 	if (Player)
 	{
-		if (SwapCamera)
-		{
-			SwapCamera->OnDeath();
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("SwapCamera is NULL in MeleeAttack_Implementation!"));
-		}
-		
-		// Player->OnPlayerDeath.Broadcast();
-
+		Player->OnPlayerDeath.Broadcast(this);
 		UE_LOG(LogTemp, Warning, TEXT("ATTACKING!"));
-
-		if (Montage)
-		{
-			PlayAnimMontage(Montage);
-		}
+		
 	}
 	return 0;
 }
