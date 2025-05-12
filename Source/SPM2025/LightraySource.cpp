@@ -5,6 +5,8 @@
 
 #include "LightrayTarget.h"
 #include "Mirror.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 #define TICK_RATE .2f
 
@@ -58,6 +60,19 @@ void ALightraySource::CastLightrayFrom(FVector Source, FVector Direction)
 			DrawDebugLine(GetWorld(), Source, HitResult.ImpactPoint, {255, 0, 0}, false, TICK_RATE);
 			DrawDebugLine(GetWorld(), HitResult.ImpactPoint, End, {0, 255, 0}, false, TICK_RATE);
 #endif
+
+			UNiagaraComponent* NC = UNiagaraFunctionLibrary::SpawnSystemAttached(
+				LightrayNS,
+				GetRootComponent(),
+				NAME_None,
+				Source,
+				FRotator::ZeroRotator,
+				EAttachLocation::Type::KeepWorldPosition,
+				false
+			);
+
+
+			//NC->SetVectorParameter(TEXT("Beam End"), GetTransform().InverseTransformPosition(HitResult.ImpactPoint));
 
 			if (
 				const AActor* HitActor = PreviousHit = HitResult.GetActor();

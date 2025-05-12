@@ -27,6 +27,9 @@ private:
 
 	void CastLightrayFrom(FVector Source, FVector Direction);
 
+	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess=true))
+	class UNiagaraSystem* LightrayNS = nullptr;
+
 protected:
 	virtual void BeginPlay() override;
 
