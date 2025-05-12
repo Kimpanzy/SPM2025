@@ -27,7 +27,8 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	auto* const icombat = Cast<ICombatInterface>(NPC);
 	
 	//Kollar så Ai har implementerat interfacet
-	if ( icombat && !Hidding)
+	//tog bort hiding checken här - herman
+	if ( icombat)
 	{
 		icombat->Execute_MeleeAttack(NPC);
 	}

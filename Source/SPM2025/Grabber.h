@@ -40,7 +40,6 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FItemDropped ItemDropped;
 	
-	
 private:
 
 	UPROPERTY(EditAnywhere)
