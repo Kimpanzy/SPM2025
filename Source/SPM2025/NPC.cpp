@@ -96,15 +96,23 @@ int ANPC::MeleeAttack_Implementation()
 {
 	if (Player)
 	{
-		Player->OnPlayerDeath.Broadcast();
-			
-		UE_LOG(LogTemp, Warning,TEXT("ATTACKING!"));
+		if (SwapCamera)
+		{
+			SwapCamera->OnDeath();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("SwapCamera is NULL in MeleeAttack_Implementation!"));
+		}
 		
+		// Player->OnPlayerDeath.Broadcast();
+
+		UE_LOG(LogTemp, Warning, TEXT("ATTACKING!"));
+
 		if (Montage)
 		{
 			PlayAnimMontage(Montage);
 		}
-		
 	}
 	return 0;
 }

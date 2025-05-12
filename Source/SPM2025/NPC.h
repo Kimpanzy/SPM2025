@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "PatrolPath.h"
+#include "SetCameraOnDeath.h"
 #include "CombatInterface.h"
 #include "PlayerCharacter.h"
 #include "Animation/AnimMontage.h"
@@ -60,6 +61,8 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player", meta = (AllowPrivateAccess = "true"))
 	APlayerCharacter* Player;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player", meta = (AllowPrivateAccess = "true"))
+	ASetCameraOnDeath* SwapCamera;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	float StepInterval;
