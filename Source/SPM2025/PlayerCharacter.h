@@ -16,7 +16,7 @@ class AFlashlight;
 class UCameraComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFlashLightDelegate);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerDied, AActor*, Killer);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDied);
 
 UCLASS()
 class SPM2025_API APlayerCharacter : public ACharacter, public ISaveable
@@ -44,9 +44,6 @@ public:
 
 	void RaycastHighligh();
 
-	UFUNCTION(BlueprintCallable)
-	void HandlePlayerDeath(AActor* Killer);
-	
 	UPROPERTY(BlueprintAssignable)
 	FFlashLightDelegate OnFlashlightToggled;
 	

@@ -7,7 +7,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "RequiemSaveGame.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -66,7 +65,6 @@ void APlayerCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	URequiemGameInstance::Execute_RequestLoad(URequiemGameInstance::GetInstance(GetWorld()), this);
-	OnPlayerDeath.AddDynamic(this, &APlayerCharacter::HandlePlayerDeath);
 }
 
 // Called every frame
@@ -183,41 +181,5 @@ void APlayerCharacter::RaycastHighligh()
 			MeshComp->SetRenderCustomDepth(true);
 		}
 	}
-}
-
-void APlayerCharacter::HandlePlayerDeath(AActor* Killer)
-{
-	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
-	if (PC && Killer)
-	{
-		PC->SetViewTargetWithBlend(Killer, 0.2f);
-	}
-
-	DisableInput(PC);
-	if (auto* const Player = GetCharacterMovement())
-	{
-		Player->DisableMovement();
-		Player->StopMovementImmediately();
-	}
-
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECR_Ignore);
-
-	if (GetMesh())
-	{
-		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}
-
-	if (Flashlight)
-	{
-		Flashlight->SetActorHiddenInGame(true);
-		Flashlight->SetActorEnableCollision(false);
-	}
-
-	if (StimulusSource)
-	{
-		StimulusSource->UnregisterFromPerceptionSystem();
-	}
-	SetActorTickEnabled(false);
 }
 
