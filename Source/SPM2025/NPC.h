@@ -35,7 +35,11 @@ public:
 	
 	USoundBase* GetSound() const;
 
+	UAudioComponent* GetAudioComponent() const;
+
 	USoundAttenuation* GetSoundAttenuation() const;
+
+	void PlayWalkingSound() ;
 	
 	int MeleeAttack_Implementation() override;
 protected:
@@ -43,6 +47,8 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	FTimerHandle FootstepTimerHandle;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 	UBehaviorTree* Tree;
 	
@@ -51,10 +57,22 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* Montage;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player", meta = (AllowPrivateAccess = "true"))
 	APlayerCharacter* Player;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	float StepInterval;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	bool bIsMoving = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	USoundBase* Sound;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* FootstepAudioComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* ActiveSoundComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	USoundBase* WalkingSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	USoundAttenuation* ATTSound;
 };
