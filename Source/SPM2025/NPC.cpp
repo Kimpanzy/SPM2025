@@ -3,6 +3,7 @@
 
 #include "NPC.h"
 
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "LevelInstance/LevelInstanceTypes.h"
 
@@ -11,6 +12,9 @@ ANPC::ANPC()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	FootstepAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("FootstepAudioComponent"));
+	FootstepAudioComponent->bAutoActivate = false;
+	FootstepAudioComponent->SetupAttachment(RootComponent);
 
 }
 
@@ -19,14 +23,22 @@ void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
 	Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
-	
+	if (WalkingSound)
+	{
+		FootstepAudioComponent->SetSound(WalkingSound);
+		PlayWalkingSound();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("WalkingSound is not set!"));
+	}
 }
 
 // Called every frame
 void ANPC::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 }
 
 // Called to bind functionality to input
@@ -34,6 +46,10 @@ void ANPC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+void ANPC::PlayWalkingSound()
+{
+		FootstepAudioComponent->Play();
 }
 
 UBehaviorTree* ANPC::GetBehaviorTree() const
@@ -65,6 +81,7 @@ USoundAttenuation* ANPC::GetSoundAttenuation() const
 {
 	return ATTSound;
 }
+
 
 int ANPC::MeleeAttack_Implementation()
 {
