@@ -22,11 +22,6 @@ URequiemGameInstance* URequiemGameInstance::GetInstance(const UObject* WorldCont
 
 void URequiemGameInstance::SaveGameToFile(const bool Async)
 {
-	if (!SaveGameInstance)
-	{
-		CreateSaveGame();
-	}
-
 	if (Async)
 	{
 		FAsyncSaveGameToSlotDelegate OnSaveComplete;
@@ -84,6 +79,11 @@ void URequiemGameInstance::LoadGame(const bool Async, const FString& SlotName, c
 
 void URequiemGameInstance::RequestSave_Implementation(const bool Async)
 {
+	if (!SaveGameInstance)
+	{
+		CreateSaveGame();
+	}
+
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsWithInterface(GetWorld(), USaveable::StaticClass(), Actors);
 
