@@ -21,63 +21,81 @@ void ALightraySource::BeginPlay()
 
 void ALightraySource::CastLightray()
 {
-	CastLightrayFrom(GetActorLocation(), GetActorForwardVector(), nullptr);
-	// TODO FIXME Make this not required to stop flickering, by removing recursion and use a while loop in CastLightrayFrom
-	Bounces = 0;
+	CastLightrayFrom(GetActorLocation(), GetActorForwardVector());
 }
 
-void ALightraySource::CastLightrayFrom(const FVector Source, const FVector Direction, const AActor* PreviousHit)
+void ALightraySource::CastLightrayFrom(FVector Source, FVector Direction)
 {
-	const FVector End = Source + Direction * RayLength;
-
 	const FCollisionObjectQueryParams CollisionObjectParams(
-		ECC_TO_BITFIELD(ECC_WorldStatic) | ECC_TO_BITFIELD(ECC_WorldDynamic));
+		ECC_TO_BITFIELD(ECC_WorldStatic) | ECC_TO_BITFIELD(ECC_WorldDynamic)
+	);
 
 	FCollisionQueryParams QueryParams = FCollisionQueryParams::DefaultQueryParam;
 
-	if (PreviousHit)
+	AActor* HitMirror = nullptr;
+	for (int i = 0; i < MaxBounces; ++i)
 	{
-		QueryParams.AddIgnoredActor(PreviousHit);
-	}
+		const FVector End = Source + Direction * RayLength;
 
-	if (FHitResult HitResult; GetWorld()->LineTraceSingleByObjectType(HitResult, Source, End, CollisionObjectParams,
-	                                                                  QueryParams))
-	{
-#if WITH_EDITOR
-		DrawDebugLine(GetWorld(), Source, HitResult.ImpactPoint, {255, 0, 0}, false, TICK_RATE);
-		DrawDebugLine(GetWorld(), HitResult.ImpactPoint, End, {0, 255, 0}, false, TICK_RATE);
-#endif
-
-		AActor* HitActor = HitResult.GetActor();
-
-		if (HitActor->IsA(AMirror::StaticClass()))
+		QueryParams.ClearIgnoredSourceObjects();
+		if (HitMirror)
 		{
-			if (++Bounces <= MaxBounces)
-			{
-				CastLightrayFrom(HitResult.ImpactPoint, HitResult.ImpactNormal, HitActor);
-			}
+			QueryParams.AddIgnoredSourceObject(HitMirror);
 		}
 
-		if (LastHitTarget != HitActor)
+		if (
+			FHitResult HitResult;
+			GetWorld()->LineTraceSingleByObjectType(
+				HitResult,
+				Source,
+				End,
+				CollisionObjectParams,
+				QueryParams
+			)
+		)
 		{
-			// Cast does not work for Blueprint implementations!
-			if (HitActor->Implements<ULightrayTarget>())
+#if WITH_EDITOR
+			DrawDebugLine(GetWorld(), Source, HitResult.ImpactPoint, {255, 0, 0}, false, TICK_RATE);
+			DrawDebugLine(GetWorld(), HitResult.ImpactPoint, End, {0, 255, 0}, false, TICK_RATE);
+#endif
+
+			AActor* HitActor = HitResult.GetActor();
+			if (HitResult.GetActor()->IsA(AMirror::StaticClass()))
 			{
-				LastHitTarget = HitActor;
-				// Cast does not work for Blueprint implementations!
-				TScriptInterface<ILightrayTarget>(HitActor)->Execute_OnRayHit(HitActor);
+				HitMirror = HitActor;
+				Source = HitResult.ImpactPoint;
+				Direction = HitResult.ImpactNormal;
 			}
-			else if (LastHitTarget.IsValid() && LastHitTarget->IsValidLowLevel())
+			else
 			{
-				TScriptInterface<ILightrayTarget>(LastHitTarget.Get())->Execute_OnRayStopHitting(LastHitTarget.Get());
-				LastHitTarget = nullptr;
+				if (
+					const bool PreviousTargetValid = LastHitTarget.IsValid() && LastHitTarget->IsValidLowLevel();
+					!PreviousTargetValid || LastHitTarget.Get() != HitActor
+				)
+				{
+					if (PreviousTargetValid)
+					{
+						ILightrayTarget::Execute_OnRayStopHitting(LastHitTarget.Get());
+						LastHitTarget.Reset();
+					}
+
+					// Cast does not work for Blueprint implementations!
+					if (HitActor->Implements<ULightrayTarget>())
+					{
+						LastHitTarget = HitActor;
+						ILightrayTarget::Execute_OnRayHit(HitActor);
+					}
+				}
+
+				// Exit early if not bouncing on mirror
+				break;
 			}
 		}
-	}
 #if WITH_EDITOR
-	else
-	{
-		DrawDebugLine(GetWorld(), Source, End, {255, 0, 0}, false, TICK_RATE);
-	}
+		else
+		{
+			DrawDebugLine(GetWorld(), Source, End, {255, 0, 0}, false, TICK_RATE);
+		}
 #endif
+	}
 }

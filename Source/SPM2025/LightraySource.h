@@ -17,7 +17,6 @@ public:
 private:
 	UPROPERTY(EditAnywhere, BlueprintGetter=GetMaxBounces)
 	int MaxBounces = 20;
-	int Bounces = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintGetter=GetRayLength)
 	float RayLength = 500.f;
@@ -26,7 +25,7 @@ private:
 
 	FTimerHandle TickTimerHandle;
 
-	void CastLightrayFrom(FVector Source, FVector Direction, const AActor* PreviousHit);
+	void CastLightrayFrom(FVector Source, FVector Direction);
 
 protected:
 	virtual void BeginPlay() override;
