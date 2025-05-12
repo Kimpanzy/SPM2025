@@ -5,6 +5,7 @@
 
 #include "NPC.h"
 #include "NPC_AIController.h"
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 UBTT_MakeSound::UBTT_MakeSound(const FObjectInitializer& ObjectInitializer)
@@ -18,15 +19,15 @@ EBTNodeResult::Type UBTT_MakeSound::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	{
 		if (auto* const NPC = Cast<ANPC>(cont->GetPawn()))
 		{
-			UGameplayStatics::PlaySoundAtLocation(
-				GetWorld(),
-				NPC->GetSound(),
-				NPC->GetActorLocation(),
-				0.4f,
-				1,
-				0,
-				NPC->GetSoundAttenuation()
-				);
+			UAudioComponent* AC = NPC->GetAudioComponent();
+			if ( AC && AC->IsPlaying())
+			{
+				return EBTNodeResult::Succeeded;
+			}
+			AC->Sound = NPC->GetSound();
+			AC->AttenuationSettings = NPC->GetSoundAttenuation();
+			AC->VolumeMultiplier = 0.3f;
+			AC->Play();
 			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 			return EBTNodeResult::Succeeded;
 		}

@@ -35,6 +35,8 @@ public:
 	
 	USoundBase* GetSound() const;
 
+	UAudioComponent* GetAudioComponent() const;
+
 	USoundAttenuation* GetSoundAttenuation() const;
 
 	void PlayWalkingSound() ;
@@ -65,8 +67,10 @@ private:
 	bool bIsMoving = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	USoundBase* Sound;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Audio", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	UAudioComponent* FootstepAudioComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* ActiveSoundComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	USoundBase* WalkingSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))

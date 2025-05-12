@@ -15,6 +15,10 @@ ANPC::ANPC()
 	FootstepAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("FootstepAudioComponent"));
 	FootstepAudioComponent->bAutoActivate = false;
 	FootstepAudioComponent->SetupAttachment(RootComponent);
+	ActiveSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ActiveSound"));
+	ActiveSoundComponent->bAutoActivate = false;
+	ActiveSoundComponent->SetupAttachment(RootComponent);
+	
 
 }
 
@@ -75,6 +79,11 @@ UAnimMontage* ANPC::GetMontage() const
 USoundBase* ANPC::GetSound() const
 {
 	return Sound;
+}
+
+UAudioComponent* ANPC::GetAudioComponent() const
+{
+	return ActiveSoundComponent;
 }
 
 USoundAttenuation* ANPC::GetSoundAttenuation() const
