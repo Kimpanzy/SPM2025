@@ -25,9 +25,16 @@ EBTNodeResult::Type UBTT_FindClosestPath::ExecuteTask(UBehaviorTreeComponent& Ow
 	}
 
 	const FVector AIPosition = cont->GetActorLocation();
-	TArray<AActor*> PathFound;
-	UGameplayStatics::GetAllActorsOfClass(cont->GetWorld(),APatrolPath::StaticClass(),PathFound);
+	//TArray<AActor*> PathFound;
+	//UGameplayStatics::GetAllActorsOfClass(cont->GetWorld(),APatrolPath::StaticClass(),PathFound);
+	ANPC* const NPC = Cast<ANPC>(cont);
+	if (!NPC)
+	{
+		return EBTNodeResult::Failed;
+	}
 
+	const TArray<APatrolPath*>& PathFound = NPC->UnlockedPaths;
+	
 	float ClosestDistance = FLT_MAX;
 	int ClosestIndex = -1;
 	APatrolPath* ClosestPath = nullptr;
@@ -58,12 +65,11 @@ EBTNodeResult::Type UBTT_FindClosestPath::ExecuteTask(UBehaviorTreeComponent& Ow
 		BC->SetValueAsObject(ClosestPathKey.SelectedKeyName, ClosestPath);
 		BC->SetValueAsInt(ClosestIndexKey.SelectedKeyName, ClosestIndex);
 		BC->SetValueAsInt("PatrolPathIndex", ClosestIndex);
-		ANPC* const NPC = Cast<ANPC>(cont);
-		if (NPC)
+		//ANPC* const NPC = Cast<ANPC>(cont);
+		if (NPC && ClosestPath)
 		{
 			NPC->SetPatrolPath(ClosestPath);
-			NPC->GetPatrolPath()->SetPatrolPoint(ClosestIndex);
-			
+			ClosestPath->SetPatrolPoint(ClosestIndex);
 		}
 		return EBTNodeResult::Succeeded;
 	}

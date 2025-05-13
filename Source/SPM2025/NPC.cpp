@@ -26,6 +26,18 @@ ANPC::ANPC()
 void ANPC::BeginPlay()
 {
 	Super::BeginPlay();
+	TArray<AActor*> FoundPaths;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APatrolPath::StaticClass(), FoundPaths);
+
+	for (auto* Actor : FoundPaths)
+	{
+		APatrolPath* Path = Cast<APatrolPath>(Actor);
+		if (Path)
+		{
+			AllPaths.Add(Path);
+			//UnlockedPaths.Add(Path);
+		}
+	}
 	Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
 	if (WalkingSound)
 	{
@@ -84,6 +96,22 @@ UAudioComponent* ANPC::GetAudioComponent() const
 USoundAttenuation* ANPC::GetSoundAttenuation() const
 {
 	return ATTSound;
+}
+
+void ANPC::UnlockPath(APatrolPath* Path)
+{
+	if (Path && !UnlockedPaths.Contains(Path))
+	{
+		UnlockedPaths.Add(Path);
+	}
+}
+
+void ANPC::LockPath(APatrolPath* Path)
+{
+	if (Path && UnlockedPaths.Contains(Path))
+	{
+		UnlockedPaths.Remove(Path);
+	}
 }
 
 
