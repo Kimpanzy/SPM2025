@@ -19,6 +19,4 @@ public:
 	UBTT_MeleeAttack();
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	
-private:
-	bool MontageHasFinished(ANPC* const NPC);
 };

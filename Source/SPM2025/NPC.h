@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "PatrolPath.h"
+#include "SetCameraOnDeath.h"
 #include "CombatInterface.h"
 #include "PlayerCharacter.h"
 #include "Animation/AnimMontage.h"
@@ -30,8 +31,6 @@ public:
 
 	APatrolPath* GetPatrolPath() const;
 	void SetPatrolPath(APatrolPath* path);
-
-	UAnimMontage* GetMontage() const;
 	
 	USoundBase* GetSound() const;
 
@@ -54,12 +53,10 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 	APatrolPath* PatrolPath;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* Montage;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player", meta = (AllowPrivateAccess = "true"))
 	APlayerCharacter* Player;
+	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	float StepInterval;

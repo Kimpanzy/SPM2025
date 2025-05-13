@@ -71,11 +71,6 @@ void ANPC::SetPatrolPath(APatrolPath* path)
 	PatrolPath = path;
 }
 
-UAnimMontage* ANPC::GetMontage() const
-{
-	return Montage;
-}
-
 USoundBase* ANPC::GetSound() const
 {
 	return Sound;
@@ -96,14 +91,8 @@ int ANPC::MeleeAttack_Implementation()
 {
 	if (Player)
 	{
-		Player->OnPlayerDeath.Broadcast();
-			
-		UE_LOG(LogTemp, Warning,TEXT("ATTACKING!"));
-		
-		if (Montage)
-		{
-			PlayAnimMontage(Montage);
-		}
+		Player->OnPlayerDeath.Broadcast(this);
+		UE_LOG(LogTemp, Warning, TEXT("ATTACKING!"));
 		
 	}
 	return 0;
