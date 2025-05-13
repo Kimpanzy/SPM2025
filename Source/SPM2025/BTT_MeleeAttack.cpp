@@ -38,7 +38,3 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	return EBTNodeResult::Succeeded;
 }
 
-bool UBTT_MeleeAttack::MontageHasFinished(ANPC* const NPC)
-{
-	return NPC->GetMesh()->GetAnimInstance()->Montage_GetIsStopped(NPC->GetMontage());
-}
