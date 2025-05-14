@@ -9,6 +9,7 @@
 #include "NPC.h"
 #include "PlayerCharacter.h"
 #include "PushableBlock.h"
+#include "PushPuzzle.h"
 #include "RequiemSaveGame.generated.h"
 
 class ISaveable;
@@ -61,6 +62,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TMap<FGuid, FArtifactSaveData> Artifacts;
+
+	UPROPERTY(VisibleAnywhere)
+	TMap<FGuid, FPushPuzzleSaveData> PushPuzzles;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FRitualCircleSaveData RitualCircle;
