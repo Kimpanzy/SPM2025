@@ -126,7 +126,7 @@ void UGrabber::Release()
 	GrabbedActor = nullptr;
 }
 
-void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation, bool DisablePhysics)
+void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation, bool bDisablePhysics)
 {
 	if (!GrabbedActor ) return;
 
@@ -143,9 +143,13 @@ void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation, bool DisablePhy
 			Prim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			Prim->SetCollisionResponseToAllChannels(ECR_Block);
 			Prim->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-			if (GrabbedActorHadPhysics && !DisablePhysics)
+			if (GrabbedActorHadPhysics && !bDisablePhysics)
 			{
 				Prim->SetSimulatePhysics(true);
+			}
+			if (bDisablePhysics)
+			{
+				Prim->SetSimulatePhysics(false);
 			}
 		}
 	}
@@ -158,7 +162,7 @@ void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation, bool DisablePhy
 }
 
 
-void UGrabber::Grab(AActor* HitActor, FVector ExtraLocationOffset, FRotator ExtraRotationOffset)
+void UGrabber::Grab(AActor* HitActor, FVector ExtraLocationOffset, FRotator ExtraRotationOffset, bool bEnablePhysics)
 {
 	if (!HitActor) return;
 	LocationOffset = ExtraLocationOffset;
@@ -172,12 +176,15 @@ void UGrabber::Grab(AActor* HitActor, FVector ExtraLocationOffset, FRotator Extr
 	for (auto* Prim : PrimitiveComponents)
 	{
 		GrabbedActorHadPhysics = Prim->IsSimulatingPhysics();
+		if (bEnablePhysics)
+		{
+			GrabbedActorHadPhysics = true;
+		}
 		if (Prim)
 		{
 			Prim->SetSimulatePhysics(false);
 			Prim->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 			Prim->SetCollisionResponseToAllChannels(ECR_Overlap);
-			
 		}
 	}
 	GrabbedActor = HitActor;
