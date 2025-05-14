@@ -30,7 +30,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, DuplicateTransient)
 	FGuid ID = FGuid::NewGuid();
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
