@@ -57,7 +57,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TMap<FGuid, FPushableBlockSaveData> PushableBlocks;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(SaveGame)
 	FNPCSaveData NPC;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)

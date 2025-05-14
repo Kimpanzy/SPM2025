@@ -14,11 +14,16 @@ class SPM2025_API APatrolPath : public AActor
 public:	
 	// Sets default values for this actor's properties
 	APatrolPath();
+	
 	FVector GetPatrolPoint(int const Index) const;
 	FVector SetPatrolPoint(int const Index);
+	
 	int Num() const;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true", MakeEditWidget="true"))
 	TArray<FVector> PatrolPoints;
 
+	UPROPERTY(VisibleAnywhere, NonPIEDuplicateTransient)
+	FGuid ID = FGuid::NewGuid();
 };
 

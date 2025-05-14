@@ -30,14 +30,11 @@ EBTNodeResult::Type UBTT_FindPatrolPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 				auto* PatrolPath = npc->GetPatrolPath();
 				if (!PatrolPath)
 				{
-					UE_LOG(LogTemp, Error, TEXT("NPC '%s' has no patrol path assigned."), *npc->GetName());
 					return EBTNodeResult::Failed;
 				}
 
 				if (!PatrolPath->PatrolPoints.IsValidIndex(Index))
 				{
-					UE_LOG(LogTemp, Error, TEXT("Invalid patrol point index %d for NPC '%s' on path '%s'"),
-						   Index, *npc->GetName(), *PatrolPath->GetName());
 					return EBTNodeResult::Failed;
 				}
 				//Hämta Vectorn för Patrol path - Sen hämta en point av path arrayn.

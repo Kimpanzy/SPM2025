@@ -2,6 +2,7 @@
 
 #include "NPC.h"
 #include "RequiemSaveGame.h"
+#include "ViewportInteractionTypes.h"
 #include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -47,37 +48,39 @@ void ANPC::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("WalkingSound is not set!"));
 	}
+
+	URequiemGameInstance::Execute_RequestLoad(URequiemGameInstance::GetInstance(GetWorld()), this);
 }
 
 void ANPC::SaveData_Implementation(URequiemSaveGame* SaveGameInstance)
 {
 	FNPCSaveData SaveData;
 	
-	for (auto* Path : AllPaths)
+	for (auto* Path : UnlockedPaths)
 	{
-		FPatrolPoints Points;
-		
-		Points.PatrolPoints = Path->PatrolPoints;
-
-		SaveData.AllPaths.Add(Points);
+		SaveData.UnlockedPaths.Add(Path->ID);
 	}
-	
-	
+
+	SaveGameInstance->NPC = SaveData;
 }
 
 void ANPC::LoadData_Implementation(URequiemSaveGame* SaveGameInstance)
 {
 	
 	FNPCSaveData SaveData = SaveGameInstance->NPC;
-	TArray<FPatrolPoints> Path = SaveData.AllPaths;
+	TArray<AActor*> FoundActor;
 	
-	for (int i = 0; i < AllPaths.Num(); i++)
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(),APatrolPath::StaticClass(),FoundActor);
+
+	for (auto* Paths : FoundActor)
 	{
-		if (i < Path.Num())
-		{
-			AllPaths[i]->PatrolPoints = Path[i].PatrolPoints;
+		APatrolPath* Path = Cast<APatrolPath>(Paths);
+		if (SaveData.UnlockedPaths.Contains(Path->ID))
+			{
+				UnlockedPaths.Add(Path);
+			}
 		}
-	}
+		
 	
 }
 

@@ -92,23 +92,12 @@ private:
 };
 
 USTRUCT()
-struct SPM2025_API FPatrolPoints
-{
-	GENERATED_BODY()
-	
-	UPROPERTY(VisibleAnywhere)
-	TArray<FVector> PatrolPoints;
-};
-
-USTRUCT()
 struct SPM2025_API FNPCSaveData
 {
 	GENERATED_BODY()
 
 	/*UPROPERTY(VisibleAnywhere)
 	APatrolPath* PatrolPath;*/
-	UPROPERTY(VisibleAnywhere)
-	TArray<FPatrolPoints> AllPaths;
-	UPROPERTY(VisibleAnywhere)
-	TArray<FPatrolPoints> UnlockedPaths;
+	UPROPERTY()
+	TArray<FGuid> UnlockedPaths;
 };
