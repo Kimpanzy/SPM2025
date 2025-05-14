@@ -48,12 +48,15 @@ void APushableBlock::MovingFinished()
 
 	if (APushPuzzleGoal* HitGoal = Cast<APushPuzzleGoal>(HitResult.GetActor()))
 	{
-		HitGoal->Complete();
+		if (!HitGoal->IsHidden())
+		{
+			HitGoal->Complete();
 
-		bIsPushingEnabled = false;
-		PushingFrom = ActorLocation;
-		PushingDirection = FVector::DownVector;
-		MovingTimeline.PlayFromStart();
+			bIsPushingEnabled = false;
+			PushingFrom = ActorLocation;
+			PushingDirection = FVector::DownVector;
+			MovingTimeline.PlayFromStart();
+		}
 	}
 }
 
