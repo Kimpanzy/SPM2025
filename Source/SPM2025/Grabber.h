@@ -30,9 +30,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Release();
 	UFUNCTION(BlueprintCallable)
-	void ReleaseAtPos(FVector Location, FRotator Rotation, bool DisablePhysics);
+	void ReleaseAtPos(FVector Location, FRotator Rotation, bool bDisablePhysics);
 	UFUNCTION(BlueprintCallable)
-	void Grab(AActor* HitActor, FVector LocationOffset, FRotator RotationOffset);
+	void Grab(AActor* HitActor, FVector LocationOffset, FRotator RotationOffset, bool bEnablePhysics);
 	UPROPERTY(BlueprintReadWrite)
 	AActor* GrabbedActor;
 	UPROPERTY(BlueprintAssignable)
