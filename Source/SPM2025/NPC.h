@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "PatrolPath.h"
+#include "SetCameraOnDeath.h"
 #include "CombatInterface.h"
 #include "PlayerCharacter.h"
 #include "Animation/AnimMontage.h"
@@ -30,31 +31,56 @@ public:
 
 	APatrolPath* GetPatrolPath() const;
 	void SetPatrolPath(APatrolPath* path);
-
-	UAnimMontage* GetMontage() const;
 	
 	USoundBase* GetSound() const;
 
+	UAudioComponent* GetAudioComponent() const;
+
 	USoundAttenuation* GetSoundAttenuation() const;
+
+	UFUNCTION(BlueprintCallable)
+	void UnlockPath(APatrolPath* Path);
+	UFUNCTION(BlueprintCallable)
+	void LockPath(APatrolPath* Path);
+
+	void PlayWalkingSound() ;
 	
 	int MeleeAttack_Implementation() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
+	APatrolPath* PatrolPath;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
+	TArray<APatrolPath*> AllPaths;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
+	TArray<APatrolPath*> UnlockedPaths;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
+	FTimerHandle FootstepTimerHandle;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 	UBehaviorTree* Tree;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
-	APatrolPath* PatrolPath;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Animation", meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* Montage;
+	
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player", meta = (AllowPrivateAccess = "true"))
 	APlayerCharacter* Player;
+	
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	float StepInterval;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	bool bIsMoving = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	USoundBase* Sound;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* FootstepAudioComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	UAudioComponent* ActiveSoundComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
+	USoundBase* WalkingSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	USoundAttenuation* ATTSound;
 };

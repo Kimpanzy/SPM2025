@@ -24,11 +24,19 @@ APatrolPath::APatrolPath()
 
 FVector APatrolPath::GetPatrolPoint(int const Index) const
 {
+	if (!PatrolPoints.IsValidIndex(Index))
+	{
+		return FVector::ZeroVector;
+	}
 	return PatrolPoints[Index];
 }
 
 FVector APatrolPath::SetPatrolPoint(int const Index)
 {
+	if (!PatrolPoints.IsValidIndex(Index))
+	{
+		return FVector::ZeroVector;
+	}
 	return PatrolPoints[Index];
 }
 

@@ -5,6 +5,8 @@
 
 #include "LightrayTarget.h"
 #include "Mirror.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 #define TICK_RATE .2f
 
@@ -21,63 +23,164 @@ void ALightraySource::BeginPlay()
 
 void ALightraySource::CastLightray()
 {
-	CastLightrayFrom(GetActorLocation(), GetActorForwardVector(), nullptr);
-	// TODO FIXME Make this not required to stop flickering, by removing recursion and use a while loop in CastLightrayFrom
-	Bounces = 0;
+	CastLightrayFrom(GetActorLocation(), GetActorForwardVector());
 }
 
-void ALightraySource::CastLightrayFrom(const FVector Source, const FVector Direction, const AActor* PreviousHit)
+void ALightraySource::CastLightrayFrom(FVector Source, FVector Direction)
 {
-	const FVector End = Source + Direction * RayLength;
-
 	const FCollisionObjectQueryParams CollisionObjectParams(
-		ECC_TO_BITFIELD(ECC_WorldStatic) | ECC_TO_BITFIELD(ECC_WorldDynamic));
+		ECC_TO_BITFIELD(ECC_WorldStatic) | ECC_TO_BITFIELD(ECC_WorldDynamic)
+	);
 
 	FCollisionQueryParams QueryParams = FCollisionQueryParams::DefaultQueryParam;
 
-	if (PreviousHit)
+	TInlineComponentArray<UNiagaraComponent*> NiagaraSystems;
+	GetComponents(UNiagaraComponent::StaticClass(), NiagaraSystems);
+
+	AActor* PreviousHit = nullptr;
+	int i = 0;
+	for (; i < MaxBounces; ++i)
 	{
-		QueryParams.AddIgnoredActor(PreviousHit);
-	}
+		const FVector End = Source + Direction * RayLength;
 
-	if (FHitResult HitResult; GetWorld()->LineTraceSingleByObjectType(HitResult, Source, End, CollisionObjectParams,
-	                                                                  QueryParams))
-	{
-#if WITH_EDITOR
-		DrawDebugLine(GetWorld(), Source, HitResult.ImpactPoint, {255, 0, 0}, false, TICK_RATE);
-		DrawDebugLine(GetWorld(), HitResult.ImpactPoint, End, {0, 255, 0}, false, TICK_RATE);
-#endif
-
-		AActor* HitActor = HitResult.GetActor();
-
-		if (HitActor->IsA(AMirror::StaticClass()))
+		QueryParams.ClearIgnoredSourceObjects();
+		if (PreviousHit)
 		{
-			if (++Bounces <= MaxBounces)
-			{
-				CastLightrayFrom(HitResult.ImpactPoint, HitResult.ImpactNormal, HitActor);
-			}
+			QueryParams.AddIgnoredSourceObject(PreviousHit);
 		}
 
-		if (LastHitTarget != HitActor)
+		if (
+			FHitResult HitResult;
+			GetWorld()->LineTraceSingleByObjectType(
+				HitResult,
+				Source,
+				End,
+				CollisionObjectParams,
+				QueryParams
+			)
+		)
 		{
-			// Cast does not work for Blueprint implementations!
-			if (HitActor->Implements<ULightrayTarget>())
+#if WITH_EDITOR
+			if (GetWorld()->IsPlayInEditor())
 			{
-				LastHitTarget = HitActor;
-				// Cast does not work for Blueprint implementations!
-				TScriptInterface<ILightrayTarget>(HitActor)->Execute_OnRayHit(HitActor);
+#endif
+				UNiagaraComponent* Lightray;
+
+				if (
+					i < NiagaraSystems.Num())
+				{
+					Lightray = NiagaraSystems[i];
+				}
+				else
+				{
+					Lightray = UNiagaraFunctionLibrary::SpawnSystemAttached(
+						LightrayNS,
+						GetRootComponent(),
+						NAME_None,
+						FVector::ZeroVector,
+						FRotator::ZeroRotator,
+						EAttachLocation::Type::KeepRelativeOffset,
+						false,
+						false
+					);
+
+					Lightray->SetFloatParameter(TEXT("Lifetime"), TICK_RATE);
+				}
+
+				Lightray->SetVectorParameter(TEXT("Beam Start"), Source);
+				Lightray->SetVectorParameter(TEXT("Beam End"), HitResult.ImpactPoint);
+				Lightray->Activate(false);
+#if WITH_EDITOR
 			}
-			else if (LastHitTarget.IsValid() && LastHitTarget->IsValidLowLevel())
+			else
 			{
-				TScriptInterface<ILightrayTarget>(LastHitTarget.Get())->Execute_OnRayStopHitting(LastHitTarget.Get());
-				LastHitTarget = nullptr;
+				DrawDebugLine(GetWorld(), Source, HitResult.ImpactPoint, {255, 0, 0}, false, TICK_RATE);
+				DrawDebugLine(GetWorld(), HitResult.ImpactPoint, End, {0, 255, 0}, false, TICK_RATE);
+			}
+#endif
+
+			if (
+				const AActor* HitActor = PreviousHit = HitResult.GetActor();
+				HitActor->IsA(AMirror::StaticClass())
+			)
+			{
+				Source = HitResult.ImpactPoint;
+				Direction = HitResult.ImpactNormal;
+			}
+			else
+			{
+				// Exit early if not bouncing on mirror
+				break;
 			}
 		}
-	}
+		else
+		{
 #if WITH_EDITOR
-	else
-	{
-		DrawDebugLine(GetWorld(), Source, End, {255, 0, 0}, false, TICK_RATE);
-	}
+			if (GetWorld()->IsPlayInEditor())
+			{
 #endif
+				UNiagaraComponent* Lightray;
+
+				if (
+					i < NiagaraSystems.Num())
+				{
+					Lightray = NiagaraSystems[i];
+				}
+				else
+				{
+					Lightray = UNiagaraFunctionLibrary::SpawnSystemAttached(
+						LightrayNS,
+						GetRootComponent(),
+						NAME_None,
+						FVector::ZeroVector,
+						FRotator::ZeroRotator,
+						EAttachLocation::Type::KeepRelativeOffset,
+						false,
+						false
+					);
+
+					Lightray->SetFloatParameter(TEXT("Lifetime"), TICK_RATE);
+				}
+
+				Lightray->SetVectorParameter(TEXT("Beam Start"), Source);
+				Lightray->SetVectorParameter(TEXT("Beam End"), End);
+				Lightray->Activate(false);
+#if WITH_EDITOR
+			}
+			else
+			{
+				DrawDebugLine(GetWorld(), Source, End, {255, 0, 0}, false, TICK_RATE);
+			}
+#endif
+
+			// No hit, exit loop
+			break;
+		}
+	}
+
+	// Account for last loop iteration
+	++i;
+	for (; i < NiagaraSystems.Num(); ++i)
+	{
+		NiagaraSystems[i]->DeactivateImmediate();
+	}
+
+	if (
+		const bool PreviousTargetValid = LastHitTarget.IsValid() && LastHitTarget->IsValidLowLevel();
+		!PreviousTargetValid || LastHitTarget.Get() != PreviousHit
+	)
+	{
+		if (PreviousTargetValid)
+		{
+			ILightrayTarget::Execute_OnRayStopHitting(LastHitTarget.Get());
+			LastHitTarget.Reset();
+		}
+
+		// Cast does not work for Blueprint implementations!
+		if (PreviousHit && PreviousHit->Implements<ULightrayTarget>())
+		{
+			LastHitTarget = PreviousHit;
+			ILightrayTarget::Execute_OnRayHit(PreviousHit);
+		}
+	}
 }

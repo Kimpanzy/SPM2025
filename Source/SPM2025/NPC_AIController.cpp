@@ -14,6 +14,7 @@
 ANPC_AIController::ANPC_AIController(FObjectInitializer const& ObjectInitializer)
 {
 	SetupPerceptionSystem();
+	
 }
 
 void ANPC_AIController::OnPossess(APawn* InPawn)
@@ -61,7 +62,7 @@ void ANPC_AIController::SetupPerceptionSystem()
 		
 		HearingConfig->HearingRange = 1000.0f;
 
-		HearingConfig->SetMaxAge(.5f);
+		HearingConfig->SetMaxAge(0.5f);
 		HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
 		HearingConfig->DetectionByAffiliation.bDetectFriendlies = true;
 		HearingConfig->DetectionByAffiliation.bDetectNeutrals = true;
@@ -80,7 +81,6 @@ void ANPC_AIController::SetupPerceptionSystem()
 void ANPC_AIController::OnTargetDetection(AActor* Actor, FAIStimulus Stimulus)
 {
 	
-	
 	if (auto* const Player = Cast<APlayerCharacter>(Actor))
 	{
 		//GetBlackboardComponent()->SetValueAsBool("CanSeePlayer",Stimulus.WasSuccessfullySensed());
@@ -92,8 +92,10 @@ void ANPC_AIController::OnTargetDetection(AActor* Actor, FAIStimulus Stimulus)
 		FVector Location = Actor->GetActorLocation()+Actor->GetActorRightVector()*200+Actor->GetActorForwardVector()*20;
 		GetBlackboardComponent()->SetValueAsVector("SoundLocation", Location);
 		GetBlackboardComponent()->SetValueAsBool("IsHiding",true);
+		UE_LOG(LogTemp, Warning, TEXT("HÖR Locker"));
 	}else
 	{
 		GetBlackboardComponent()->SetValueAsVector("SoundLocation", Actor->GetActorLocation());
+		UE_LOG(LogTemp, Warning, TEXT("HÖR FlashLight"));
 	}
 }

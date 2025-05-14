@@ -27,7 +27,8 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	auto* const icombat = Cast<ICombatInterface>(NPC);
 	
 	//Kollar så Ai har implementerat interfacet
-	if ( icombat && !Hidding)
+	//tog bort hiding checken här - herman
+	if ( icombat)
 	{
 		icombat->Execute_MeleeAttack(NPC);
 	}
@@ -37,7 +38,3 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	return EBTNodeResult::Succeeded;
 }
 
-bool UBTT_MeleeAttack::MontageHasFinished(ANPC* const NPC)
-{
-	return NPC->GetMesh()->GetAnimInstance()->Montage_GetIsStopped(NPC->GetMontage());
-}

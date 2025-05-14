@@ -12,6 +12,36 @@
 
 class ISaveable;
 
+USTRUCT(Blueprintable)
+struct SPM2025_API FArtifactSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FVector Location;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FRotator Rotation;
+};
+
+USTRUCT(Blueprintable)
+struct SPM2025_API FRitualCircleSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TArray<FGuid> SlotObjectIds;
+};
+
+USTRUCT(Blueprintable)
+struct SPM2025_API FRatCageSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bRatIsInCage;
+};
+
 UCLASS()
 class SPM2025_API URequiemSaveGame : public USaveGame
 {
@@ -23,6 +53,15 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	TMap<FGuid, FPushableBlockSaveData> PushableBlocks;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TMap<FGuid, FArtifactSaveData> Artifacts;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FRitualCircleSaveData RitualCircle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FRatCageSaveData RatCage;
 
 	UPROPERTY(VisibleAnywhere)
 	FPlayerSaveData PlayerSaveData;
