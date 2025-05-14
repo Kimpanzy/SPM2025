@@ -2,7 +2,6 @@
 
 #include "NPC.h"
 #include "RequiemSaveGame.h"
-#include "ViewportInteractionTypes.h"
 #include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
 
