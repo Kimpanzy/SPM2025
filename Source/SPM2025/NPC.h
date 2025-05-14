@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "PatrolPath.h"
-#include "SetCameraOnDeath.h"
 #include "CombatInterface.h"
+#include "Saveable.h"
 #include "PlayerCharacter.h"
 #include "Animation/AnimMontage.h"
 #include "GameFramework/Character.h"
@@ -14,7 +14,7 @@
 #include "NPC.generated.h"
 
 UCLASS()
-class SPM2025_API ANPC : public ACharacter, public ICombatInterface
+class SPM2025_API ANPC : public ACharacter, public ICombatInterface, public ISaveable
 {
 	GENERATED_BODY()
 
@@ -83,4 +83,32 @@ private:
 	USoundBase* WalkingSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	USoundAttenuation* ATTSound;
+	
+	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
+	void SaveData_Implementation(URequiemSaveGame* SaveGameInstance) override;
+
+	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
+	void LoadData_Implementation(URequiemSaveGame* SaveGameInstance) override;
+};
+
+USTRUCT()
+struct SPM2025_API FPatrolPoints
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(VisibleAnywhere)
+	TArray<FVector> PatrolPoints;
+};
+
+USTRUCT()
+struct SPM2025_API FNPCSaveData
+{
+	GENERATED_BODY()
+
+	/*UPROPERTY(VisibleAnywhere)
+	APatrolPath* PatrolPath;*/
+	UPROPERTY(VisibleAnywhere)
+	TArray<FPatrolPoints> AllPaths;
+	UPROPERTY(VisibleAnywhere)
+	TArray<FPatrolPoints> UnlockedPaths;
 };

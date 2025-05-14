@@ -19,6 +19,6 @@ public:
 	int Num() const;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AI", meta = (AllowPrivateAccess = "true", MakeEditWidget="true"))
 	TArray<FVector> PatrolPoints;
-private:
-	
+
 };
+

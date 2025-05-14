@@ -6,6 +6,7 @@
 #include "RequiemGameInstance.h"
 #include "GameFramework/SaveGame.h"
 #include "Mirror.h"
+#include "NPC.h"
 #include "PlayerCharacter.h"
 #include "PushableBlock.h"
 #include "RequiemSaveGame.generated.h"
@@ -48,11 +49,15 @@ class SPM2025_API URequiemSaveGame : public USaveGame
 	GENERATED_BODY()
 
 public:
+	
 	UPROPERTY(VisibleAnywhere)
 	TMap<FGuid, FMirrorSaveData> Mirrors;
 
 	UPROPERTY(VisibleAnywhere)
 	TMap<FGuid, FPushableBlockSaveData> PushableBlocks;
+
+	UPROPERTY(VisibleAnywhere)
+	FNPCSaveData NPC;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TMap<FGuid, FArtifactSaveData> Artifacts;
@@ -84,3 +89,4 @@ public:
 
 	void LoadDataFor(const TScriptInterface<ISaveable>& SaveableActor);
 };
+

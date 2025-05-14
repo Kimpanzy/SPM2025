@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "NPC.h"
-
+#include "RequiemSaveGame.h"
 #include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "LevelInstance/LevelInstanceTypes.h"
+
 
 // Sets default values
 ANPC::ANPC()
@@ -48,6 +47,38 @@ void ANPC::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("WalkingSound is not set!"));
 	}
+}
+
+void ANPC::SaveData_Implementation(URequiemSaveGame* SaveGameInstance)
+{
+	FNPCSaveData SaveData;
+	
+	for (auto* Path : AllPaths)
+	{
+		FPatrolPoints Points;
+		
+		Points.PatrolPoints = Path->PatrolPoints;
+
+		SaveData.AllPaths.Add(Points);
+	}
+	
+	
+}
+
+void ANPC::LoadData_Implementation(URequiemSaveGame* SaveGameInstance)
+{
+	
+	FNPCSaveData SaveData = SaveGameInstance->NPC;
+	TArray<FPatrolPoints> Path = SaveData.AllPaths;
+	
+	for (int i = 0; i < AllPaths.Num(); i++)
+	{
+		if (i < Path.Num())
+		{
+			AllPaths[i]->PatrolPoints = Path[i].PatrolPoints;
+		}
+	}
+	
 }
 
 // Called every frame
