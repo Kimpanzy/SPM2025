@@ -71,7 +71,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FRatCageSaveData RatCage;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FPlayerSaveData PlayerSaveData;
 
 private:
