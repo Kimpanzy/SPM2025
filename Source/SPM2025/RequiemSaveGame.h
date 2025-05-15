@@ -50,14 +50,13 @@ class SPM2025_API URequiemSaveGame : public USaveGame
 	GENERATED_BODY()
 
 public:
-	
 	UPROPERTY(VisibleAnywhere)
 	TMap<FGuid, FMirrorSaveData> Mirrors;
 
 	UPROPERTY(VisibleAnywhere)
 	TMap<FGuid, FPushableBlockSaveData> PushableBlocks;
 
-	UPROPERTY(SaveGame)
+	UPROPERTY(VisibleAnywhere)
 	FNPCSaveData NPC;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -93,4 +92,3 @@ public:
 
 	void LoadDataFor(const TScriptInterface<ISaveable>& SaveableActor);
 };
-

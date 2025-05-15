@@ -31,7 +31,7 @@ public:
 
 	APatrolPath* GetPatrolPath() const;
 	void SetPatrolPath(APatrolPath* path);
-	
+
 	USoundBase* GetSound() const;
 
 	UAudioComponent* GetAudioComponent() const;
@@ -43,9 +43,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LockPath(APatrolPath* Path);
 
-	void PlayWalkingSound() ;
-	
-	int MeleeAttack_Implementation() override;
+	void PlayWalkingSound();
+
+	virtual int MeleeAttack_Implementation() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 	APatrolPath* PatrolPath;
@@ -53,22 +53,22 @@ public:
 	TArray<APatrolPath*> AllPaths;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 	TArray<APatrolPath*> UnlockedPaths;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
 	FTimerHandle FootstepTimerHandle;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (AllowPrivateAccess = "true"))
 	UBehaviorTree* Tree;
-	
-	
-	
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player", meta = (AllowPrivateAccess = "true"))
 	APlayerCharacter* Player;
-	
-	
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	float StepInterval;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
@@ -83,7 +83,7 @@ private:
 	USoundBase* WalkingSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 	USoundAttenuation* ATTSound;
-	
+
 	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
 	void SaveData_Implementation(URequiemSaveGame* SaveGameInstance) override;
 
@@ -96,8 +96,6 @@ struct SPM2025_API FNPCSaveData
 {
 	GENERATED_BODY()
 
-	/*UPROPERTY(VisibleAnywhere)
-	APatrolPath* PatrolPath;*/
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TArray<FGuid> UnlockedPaths;
 };

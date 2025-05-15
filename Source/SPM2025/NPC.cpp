@@ -9,7 +9,7 @@
 // Sets default values
 ANPC::ANPC()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	FootstepAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("FootstepAudioComponent"));
 	FootstepAudioComponent->bAutoActivate = false;
@@ -17,8 +17,6 @@ ANPC::ANPC()
 	ActiveSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ActiveSound"));
 	ActiveSoundComponent->bAutoActivate = false;
 	ActiveSoundComponent->SetupAttachment(RootComponent);
-	
-
 }
 
 // Called when the game starts or when spawned
@@ -37,7 +35,7 @@ void ANPC::BeginPlay()
 			//UnlockedPaths.Add(Path);
 		}
 	}
-	Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
+	Player = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (WalkingSound)
 	{
 		FootstepAudioComponent->SetSound(WalkingSound);
@@ -54,8 +52,9 @@ void ANPC::BeginPlay()
 void ANPC::SaveData_Implementation(URequiemSaveGame* SaveGameInstance)
 {
 	FNPCSaveData SaveData;
-	
-	for (auto* Path : UnlockedPaths)
+	SaveData.UnlockedPaths.Reserve(this->UnlockedPaths.Num());
+
+	for (const APatrolPath* Path : this->UnlockedPaths)
 	{
 		SaveData.UnlockedPaths.Add(Path->ID);
 	}
@@ -65,40 +64,35 @@ void ANPC::SaveData_Implementation(URequiemSaveGame* SaveGameInstance)
 
 void ANPC::LoadData_Implementation(URequiemSaveGame* SaveGameInstance)
 {
-	
 	FNPCSaveData SaveData = SaveGameInstance->NPC;
 	TArray<AActor*> FoundActor;
-	
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(),APatrolPath::StaticClass(),FoundActor);
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APatrolPath::StaticClass(), FoundActor);
 
 	for (auto* Paths : FoundActor)
 	{
-		APatrolPath* Path = Cast<APatrolPath>(Paths);
-		if (SaveData.UnlockedPaths.Contains(Path->ID))
-			{
-				UnlockedPaths.Add(Path);
-			}
+		if (APatrolPath* Path = Cast<APatrolPath>(Paths); SaveData.UnlockedPaths.Contains(Path->ID))
+		{
+			this->UnlockedPaths.Add(Path);
 		}
-		
-	
+	}
 }
 
 // Called every frame
 void ANPC::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
 }
 
 // Called to bind functionality to input
 void ANPC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
+
 void ANPC::PlayWalkingSound()
 {
-		FootstepAudioComponent->Play();
+	FootstepAudioComponent->Play();
 }
 
 UBehaviorTree* ANPC::GetBehaviorTree() const
@@ -154,8 +148,6 @@ int ANPC::MeleeAttack_Implementation()
 	{
 		Player->OnPlayerDeath.Broadcast(this);
 		UE_LOG(LogTemp, Warning, TEXT("ATTACKING!"));
-		
 	}
 	return 0;
 }
-
