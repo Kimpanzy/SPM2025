@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "NPC.h"
+
+#include "BossTrigger.h"
+#include "EngineUtils.h"
 #include "RequiemSaveGame.h"
 #include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -44,6 +47,14 @@ void ANPC::BeginPlay()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("WalkingSound is not set!"));
+	}
+	for (TActorIterator<ABossTrigger> It(GetWorld()); It; ++It)
+	{
+		ABossTrigger* Trigger = *It;
+		if (Trigger)
+		{
+			Trigger->OnBossTriggerActivated.AddDynamic(this, &ANPC::HandlePatrolRouteChange);
+		}
 	}
 
 	URequiemGameInstance::Execute_RequestLoad(URequiemGameInstance::GetInstance(GetWorld()), this);
@@ -105,9 +116,9 @@ APatrolPath* ANPC::GetPatrolPath() const
 	return PatrolPath;
 }
 
-void ANPC::SetPatrolPath(APatrolPath* path)
+void ANPC::SetPatrolPath(APatrolPath* Path)
 {
-	PatrolPath = path;
+	PatrolPath = Path;
 }
 
 USoundBase* ANPC::GetSound() const
@@ -138,6 +149,14 @@ void ANPC::LockPath(APatrolPath* Path)
 	if (Path && UnlockedPaths.Contains(Path))
 	{
 		UnlockedPaths.Remove(Path);
+	}
+}
+
+void ANPC::HandlePatrolRouteChange(APatrolPath* Path)
+{
+	if (Path)
+	{
+		SetPatrolPath(Path);
 	}
 }
 
