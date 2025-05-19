@@ -13,7 +13,7 @@ APushableBallGoal::APushableBallGoal()
 
 void APushableBallGoal::Complete()
 {
-	if (!bIsComplete)
+	if (bIsComplete)
 	{
 		return;
 	}
