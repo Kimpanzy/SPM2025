@@ -45,7 +45,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, NonPIEDuplicateTransient)
 	FGuid ID = FGuid::NewGuid();
 
 	virtual void Tick(const float DeltaTime) override;

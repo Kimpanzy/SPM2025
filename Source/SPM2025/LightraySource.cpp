@@ -5,6 +5,8 @@
 
 #include "LightrayTarget.h"
 #include "Mirror.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 #define TICK_RATE .2f
 
@@ -32,8 +34,12 @@ void ALightraySource::CastLightrayFrom(FVector Source, FVector Direction)
 
 	FCollisionQueryParams QueryParams = FCollisionQueryParams::DefaultQueryParam;
 
+	TInlineComponentArray<UNiagaraComponent*> NiagaraSystems;
+	GetComponents(UNiagaraComponent::StaticClass(), NiagaraSystems);
+
 	AActor* PreviousHit = nullptr;
-	for (int i = 0; i < MaxBounces; ++i)
+	int i = 0;
+	for (; i < MaxBounces; ++i)
 	{
 		const FVector End = Source + Direction * RayLength;
 
@@ -55,8 +61,42 @@ void ALightraySource::CastLightrayFrom(FVector Source, FVector Direction)
 		)
 		{
 #if WITH_EDITOR
-			DrawDebugLine(GetWorld(), Source, HitResult.ImpactPoint, {255, 0, 0}, false, TICK_RATE);
-			DrawDebugLine(GetWorld(), HitResult.ImpactPoint, End, {0, 255, 0}, false, TICK_RATE);
+			if (GetWorld()->IsPlayInEditor())
+			{
+#endif
+				UNiagaraComponent* Lightray;
+
+				if (
+					i < NiagaraSystems.Num())
+				{
+					Lightray = NiagaraSystems[i];
+				}
+				else
+				{
+					Lightray = UNiagaraFunctionLibrary::SpawnSystemAttached(
+						LightrayNS,
+						GetRootComponent(),
+						NAME_None,
+						FVector::ZeroVector,
+						FRotator::ZeroRotator,
+						EAttachLocation::Type::KeepRelativeOffset,
+						false,
+						false
+					);
+
+					Lightray->SetFloatParameter(TEXT("Lifetime"), TICK_RATE);
+				}
+
+				Lightray->SetVectorParameter(TEXT("Beam Start"), Source);
+				Lightray->SetVectorParameter(TEXT("Beam End"), HitResult.ImpactPoint);
+				Lightray->Activate(false);
+#if WITH_EDITOR
+			}
+			else
+			{
+				DrawDebugLine(GetWorld(), Source, HitResult.ImpactPoint, {255, 0, 0}, false, TICK_RATE);
+				DrawDebugLine(GetWorld(), HitResult.ImpactPoint, End, {0, 255, 0}, false, TICK_RATE);
+			}
 #endif
 
 			if (
@@ -73,12 +113,56 @@ void ALightraySource::CastLightrayFrom(FVector Source, FVector Direction)
 				break;
 			}
 		}
-#if WITH_EDITOR
 		else
 		{
-			DrawDebugLine(GetWorld(), Source, End, {255, 0, 0}, false, TICK_RATE);
-		}
+#if WITH_EDITOR
+			if (GetWorld()->IsPlayInEditor())
+			{
 #endif
+				UNiagaraComponent* Lightray;
+
+				if (
+					i < NiagaraSystems.Num())
+				{
+					Lightray = NiagaraSystems[i];
+				}
+				else
+				{
+					Lightray = UNiagaraFunctionLibrary::SpawnSystemAttached(
+						LightrayNS,
+						GetRootComponent(),
+						NAME_None,
+						FVector::ZeroVector,
+						FRotator::ZeroRotator,
+						EAttachLocation::Type::KeepRelativeOffset,
+						false,
+						false
+					);
+
+					Lightray->SetFloatParameter(TEXT("Lifetime"), TICK_RATE);
+				}
+
+				Lightray->SetVectorParameter(TEXT("Beam Start"), Source);
+				Lightray->SetVectorParameter(TEXT("Beam End"), End);
+				Lightray->Activate(false);
+#if WITH_EDITOR
+			}
+			else
+			{
+				DrawDebugLine(GetWorld(), Source, End, {255, 0, 0}, false, TICK_RATE);
+			}
+#endif
+
+			// No hit, exit loop
+			break;
+		}
+	}
+
+	// Account for last loop iteration
+	++i;
+	for (; i < NiagaraSystems.Num(); ++i)
+	{
+		NiagaraSystems[i]->DeactivateImmediate();
 	}
 
 	if (

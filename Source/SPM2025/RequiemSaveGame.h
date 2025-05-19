@@ -6,8 +6,10 @@
 #include "RequiemGameInstance.h"
 #include "GameFramework/SaveGame.h"
 #include "Mirror.h"
+#include "NPC.h"
 #include "PlayerCharacter.h"
 #include "PushableBlock.h"
+#include "PushPuzzle.h"
 #include "RequiemSaveGame.generated.h"
 
 class ISaveable;
@@ -54,8 +56,14 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TMap<FGuid, FPushableBlockSaveData> PushableBlocks;
 
+	UPROPERTY(VisibleAnywhere)
+	FNPCSaveData NPC;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TMap<FGuid, FArtifactSaveData> Artifacts;
+
+	UPROPERTY(VisibleAnywhere)
+	TMap<FGuid, FPushPuzzleSaveData> PushPuzzles;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FRitualCircleSaveData RitualCircle;
@@ -63,7 +71,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FRatCageSaveData RatCage;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FPlayerSaveData PlayerSaveData;
 
 private:

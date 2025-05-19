@@ -27,11 +27,22 @@ EBTNodeResult::Type UBTT_FindPatrolPoint::ExecuteTask(UBehaviorTreeComponent& Ow
 			//Hämta AI(NPC)
 			if (auto* npc = Cast<ANPC>(cont->GetPawn()))
 			{
+				auto* PatrolPath = npc->GetPatrolPath();
+				if (!PatrolPath)
+				{
+					return EBTNodeResult::Failed;
+				}
+
+				if (!PatrolPath->PatrolPoints.IsValidIndex(Index))
+				{
+					return EBTNodeResult::Failed;
+				}
 				//Hämta Vectorn för Patrol path - Sen hämta en point av path arrayn.
-				auto const Point = npc->GetPatrolPath()->GetPatrolPoint(Index);
+				auto const Point = PatrolPath->GetPatrolPoint(Index);
 				
 				//Convertera point till global
-				auto const GlobalPoint = npc->GetPatrolPath()->GetActorTransform().TransformPosition(Point);
+				auto const GlobalPoint = PatrolPath->GetActorTransform().TransformPosition(Point);
+				
 				BC->SetValueAsVector(PatrolPathVectorKey.SelectedKeyName, GlobalPoint);
 
 				//Avsluta med success

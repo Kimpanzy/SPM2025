@@ -7,8 +7,8 @@ public class SPM2025 : ModuleRules
 	public SPM2025(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { 
+
+		PublicDependencyModuleNames.AddRange([
 			"Core",
 			"CoreUObject",
 			"Engine",
@@ -18,14 +18,15 @@ public class SPM2025 : ModuleRules
 			"GameplayTasks",
 			"NavigationSystem",
 			"PhysicsCore",
-			"UMG"
-		});
+			"UMG",
+			"Niagara"
+		]);
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.AddRange([]);
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
-		
+
 		// Uncomment if you are using online features
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
 

@@ -16,6 +16,7 @@ class AFlashlight;
 class UCameraComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FFlashLightDelegate);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerDied, AActor*, Killer);
 
 UCLASS()
@@ -39,17 +40,17 @@ public:
 	bool bIsHiding;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
+
 	void ToggleFlashlight(const FInputActionValue& value);
 
 	void RaycastHighligh();
 
 	UFUNCTION(BlueprintCallable)
 	void HandlePlayerDeath(AActor* Killer);
-	
+
 	UPROPERTY(BlueprintAssignable)
 	FFlashLightDelegate OnFlashlightToggled;
-	
+
 	UPROPERTY(BlueprintAssignable)
 	FPlayerDied OnPlayerDeath;
 
@@ -58,7 +59,7 @@ protected:
 
 	//-->Input actions<--
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Enhanced Input")
-	UInputMappingContext*  PlayerInputContext;
+	UInputMappingContext* PlayerInputContext;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Enhanced Input")
 	UInputAction* FlashlightAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Enhanced Input")
@@ -69,7 +70,7 @@ protected:
 	UInputAction* LookAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, category = "Enhanced Input")
 	UInputAction* SprintAction;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UCameraComponent* CameraComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -81,28 +82,28 @@ protected:
 	void InputJump(const FInputActionValue& Value);
 	void InputLook(const FInputActionValue& Value);
 	void InputSprint(const FInputActionValue& Value);
-	
+
 private:
 	//Så AI kan höra/se spelare
 	class UAIPerceptionStimuliSourceComponent* StimulusSource;
 
 	void SetupStimulusSource();
-
-	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
-	void SaveData_Implementation(URequiemSaveGame* SaveGameInstance) override;
-
-	// ReSharper disable once CppEnforceOverridingFunctionStyle - Not Required for Unreal Interface
-	void LoadData_Implementation(URequiemSaveGame* SaveGameInstance) override;
 };
 
-USTRUCT()
+USTRUCT(Blueprintable)
 struct SPM2025_API FPlayerSaveData
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FVector Position;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FRotator Rotation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TArray<bool> TutorialBools;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TArray<FString> Keys;
 };
