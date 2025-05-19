@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BallPushPuzzle.h"
 #include "RequiemGameInstance.h"
 #include "GameFramework/SaveGame.h"
 #include "Mirror.h"
@@ -55,6 +56,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	TMap<FGuid, FPushableBlockSaveData> PushableBlocks;
+
+	UPROPERTY(VisibleAnywhere)
+	TMap<FGuid, FBallPushPuzzleSaveData> PushableBalls;
 
 	UPROPERTY(VisibleAnywhere)
 	FNPCSaveData NPC;
