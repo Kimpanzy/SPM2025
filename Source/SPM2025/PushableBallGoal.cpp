@@ -31,8 +31,8 @@ void APushableBallGoal::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 		return;
 	}
 
-	OtherActor->SetActorLocation(TriggerBox->GetComponentLocation());
 	OtherActor->DisableComponentsSimulatePhysics();
+	OtherActor->SetActorLocation(TriggerBox->GetComponentLocation());
 	Complete();
 }
 
