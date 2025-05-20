@@ -45,6 +45,18 @@ struct SPM2025_API FRatCageSaveData
 	bool bRatIsInCage;
 };
 
+USTRUCT(Blueprintable)
+struct SPM2025_API FRatSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FVector Location;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FRotator Rotation;
+};
+
 UCLASS()
 class SPM2025_API URequiemSaveGame : public USaveGame
 {
@@ -71,6 +83,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FRitualCircleSaveData RitualCircle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FRatSaveData Rat;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FRatCageSaveData RatCage;
