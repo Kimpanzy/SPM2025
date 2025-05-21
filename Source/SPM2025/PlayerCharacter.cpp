@@ -198,6 +198,7 @@ void APlayerCharacter::HandlePlayerDeath(AActor* Killer)
 	if (GetMesh())
 	{
 		GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		ArmSkeleton->SetVisibility(false);
 	}
 
 	if (Flashlight)
