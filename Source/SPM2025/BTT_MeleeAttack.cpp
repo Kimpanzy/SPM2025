@@ -5,6 +5,7 @@
 
 #include "AIController.h"
 #include "NPC.h"
+#include "Kismet/GameplayStatics.h"
 
 UBTT_MeleeAttack::UBTT_MeleeAttack()
 {
@@ -28,10 +29,18 @@ EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	
 	//Kollar så Ai har implementerat interfacet
 	//tog bort hiding checken här - herman
-	if ( icombat)
+	if (auto* const PlayerChar = UGameplayStatics::GetPlayerCharacter(GetWorld(),0))
 	{
-		icombat->Execute_MeleeAttack(NPC);
+		if ( auto* const Player = Cast<APlayerCharacter>(PlayerChar))
+		{
+			
+			if ( icombat && !Player->bIsHiding)
+			{
+				icombat->Execute_MeleeAttack(NPC);
+			}
+		}
 	}
+	
 
 	//Avlusta med success
 	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
