@@ -57,6 +57,15 @@ struct SPM2025_API FRatSaveData
 	FRotator Rotation;
 };
 
+USTRUCT(Blueprintable)
+struct SPM2025_API FLeverPuzzleSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TArray<bool> PulledLevers;
+};
+
 UCLASS()
 class SPM2025_API URequiemSaveGame : public USaveGame
 {
@@ -80,6 +89,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	TMap<FGuid, FPushPuzzleSaveData> PushPuzzles;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TMap<FGuid, FLeverPuzzleSaveData> LeverPuzzles;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FRitualCircleSaveData RitualCircle;
