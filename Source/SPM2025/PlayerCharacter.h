@@ -54,6 +54,9 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FPlayerDied OnPlayerDeath;
 
+	UPROPERTY(visibleAnywhere)
+	bool bIsDead = false;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -77,7 +80,7 @@ protected:
 	USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USkeletalMeshComponent* ArmSkeleton;
-
+	
 	void InputMove(const FInputActionValue& Value);
 	void InputJump(const FInputActionValue& Value);
 	void InputLook(const FInputActionValue& Value);

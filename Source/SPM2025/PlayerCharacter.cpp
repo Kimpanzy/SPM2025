@@ -172,6 +172,13 @@ void APlayerCharacter::RaycastHighligh()
 
 void APlayerCharacter::HandlePlayerDeath(AActor* Killer)
 {
+	
+	if (bIsDead)
+	{
+		return;
+	}
+	bIsDead = true;
+	UE_LOG(LogTemp, Warning, TEXT("HandlePlayer!"));
 	APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
 	if (PC && Killer)
 	{

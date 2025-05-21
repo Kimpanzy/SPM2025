@@ -163,7 +163,7 @@ void ANPC::HandlePatrolRouteChange(APatrolPath* Path)
 
 int ANPC::MeleeAttack_Implementation()
 {
-	if (Player)
+	if (Player && !Player->bIsDead)
 	{
 		Player->OnPlayerDeath.Broadcast(this);
 		UE_LOG(LogTemp, Warning, TEXT("ATTACKING!"));
