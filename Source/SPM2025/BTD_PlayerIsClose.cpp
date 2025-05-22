@@ -17,5 +17,7 @@ bool UBTD_PlayerIsClose::CalculateRawConditionValue(UBehaviorTreeComponent& Owne
 	{
 		return false;
 	}
-	return RatAICon->GetPawn()->GetDistanceTo(RatAICon->Player) < 500 && !RatAICon->bPlayerIsHoldingCheese;
+	auto* const RatPawn = RatAICon->GetPawn();
+	
+	return RatPawn && RatPawn->GetDistanceTo(RatAICon->Player) < 500 && !RatAICon->bPlayerIsHoldingCheese;
 }
