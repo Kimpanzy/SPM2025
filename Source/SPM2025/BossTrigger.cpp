@@ -16,7 +16,7 @@ void ABossTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 
-	DrawDebugBox(
+	/*DrawDebugBox(
 		GetWorld(),
 		GetActorLocation(),
 		GetComponentsBoundingBox().GetExtent(),
@@ -24,7 +24,7 @@ void ABossTrigger::BeginPlay()
 		true,
 		-1.f,
 		0,
-		5);
+		5);*/
 }
 void ABossTrigger::OnEnterTrigger(AActor* OverlappedActor, AActor* OtherActor)
 {
@@ -32,7 +32,7 @@ void ABossTrigger::OnEnterTrigger(AActor* OverlappedActor, AActor* OtherActor)
 	{
 		if (auto* const Player = Cast<APlayerCharacter>(OtherActor))
 		{
-			PRINT(TEXT("Triggered"));
+			
 			OnBossTriggerActivated.Broadcast(PatrolPath);
 		}
 		
