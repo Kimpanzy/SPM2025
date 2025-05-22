@@ -45,6 +45,7 @@ public:
 	void LockPath(APatrolPath* Path);
 	UFUNCTION(BlueprintCallable)
 	void HandlePatrolRouteChange(APatrolPath* Path);
+	
 	void PlayWalkingSound();
 
 	virtual int MeleeAttack_Implementation() override;
