@@ -82,7 +82,7 @@ public:
 	TMap<FGuid, FBallPushPuzzleSaveData> PushableBalls;
 
 	UPROPERTY(VisibleAnywhere)
-	FNPCSaveData NPC;
+	FNPCSaveData NPC = FNPCSaveData();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TMap<FGuid, FArtifactSaveData> Artifacts;
@@ -94,16 +94,16 @@ public:
 	TMap<FGuid, FLeverPuzzleSaveData> LeverPuzzles;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FRitualCircleSaveData RitualCircle;
+	FRitualCircleSaveData RitualCircle = FRitualCircleSaveData();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FRatSaveData Rat;
+	FRatSaveData Rat = FRatSaveData();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FRatCageSaveData RatCage;
+	FRatCageSaveData RatCage = FRatCageSaveData();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FPlayerSaveData PlayerSaveData;
+	FPlayerSaveData PlayerSaveData = FPlayerSaveData();
 
 private:
 	friend void URequiemGameInstance::CreateSaveGame(const FString& SlotName, int UserIndex);
