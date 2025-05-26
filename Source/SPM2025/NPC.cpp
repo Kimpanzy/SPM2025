@@ -20,6 +20,9 @@ ANPC::ANPC()
 	ActiveSoundComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("ActiveSound"));
 	ActiveSoundComponent->bAutoActivate = false;
 	ActiveSoundComponent->SetupAttachment(RootComponent);
+	ChaseAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("ChaseAudio"));
+	ChaseAudio->bAutoActivate = false;
+	ChaseAudio->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
