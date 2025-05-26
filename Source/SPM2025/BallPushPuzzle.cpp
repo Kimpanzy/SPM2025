@@ -27,7 +27,7 @@ void ABallPushPuzzle::BeginPlay()
 
 void ABallPushPuzzle::OnGoalComplete(APushableBallGoal* Goal)
 {
-	if (Goals.Num() <= ++CompletedGoals && MovableWall)
+	if (Goals.Num() == ++CompletedGoals && MovableWall)
 	{
 		MovableWall->Move();
 	}
@@ -55,6 +55,10 @@ void ABallPushPuzzle::LoadData_Implementation(URequiemSaveGame* SaveGameInstance
 			if (i < SaveData->Goals.Num() && SaveData->Goals[i])
 			{
 				Goals[i]->Complete();
+				if (Goals.Num() == CompletedGoals)
+				{
+					URequiemGameInstance::Execute_RequestSave(URequiemGameInstance::GetInstance(GetWorld()), true);
+				}
 			}
 		}
 	}
