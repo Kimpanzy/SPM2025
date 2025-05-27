@@ -64,5 +64,5 @@ struct SPM2025_API FMirrorSaveData
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere)
-	FRotator Rotation;
+	FRotator Rotation = FRotator::ZeroRotator;
 };

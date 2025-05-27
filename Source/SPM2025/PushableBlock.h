@@ -69,5 +69,5 @@ struct SPM2025_API FPushableBlockSaveData
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere)
-	FVector Position;
+	FVector Position = FVector::ZeroVector;
 };
