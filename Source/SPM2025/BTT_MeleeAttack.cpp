@@ -14,9 +14,8 @@ UBTT_MeleeAttack::UBTT_MeleeAttack()
 
 EBTNodeResult::Type UBTT_MeleeAttack::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	//Kollar NPC är out of range och attackerar inte
-	auto const OutOfRange = !OwnerComp.GetBlackboardComponent()->GetValueAsBool(GetSelectedBlackboardKey());
-	if (OutOfRange)
+	//Kollar NPC är out of range och attackerar int
+	if (auto const OutOfRange = !OwnerComp.GetBlackboardComponent()->GetValueAsBool(GetSelectedBlackboardKey()))
 	{
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		return EBTNodeResult::Succeeded;
