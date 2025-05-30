@@ -37,7 +37,7 @@ EBTNodeResult::Type UBTT_FindRandomLocation::ExecuteTask(UBehaviorTreeComponent&
 					
 					if (NavSys->GetRandomPointInNavigableRadius(Orgin, SearchRadius, NavLoc))
 					{
-						if (Player && FVector::Dist(NavLoc.Location, Player->GetActorLocation()) < minDist)
+						if (Player && FVector::Dist(NavLoc.Location, Player->GetActorLocation()) > minDist)
 						{
 						OwnerComp.GetBlackboardComponent()->SetValueAsVector(GetSelectedBlackboardKey(), NavLoc.Location);
 						//Avsluta med success
