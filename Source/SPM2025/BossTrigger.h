@@ -24,7 +24,10 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnBossTriggerActivated OnBossTriggerActivated;
 	
-	
+	UPROPERTY(EditInstanceOnly, Category = "AISound")
+	USoundBase* Sound;
+	UPROPERTY(EditAnywhere, Category = "AISound")
+	USoundAttenuation* SoundAttenuation;
 protected:
 	
 	virtual void BeginPlay() override;
