@@ -3,7 +3,9 @@
 
 #include "BossTrigger.h"
 #include "DrawDebugHelpers.h"
+#include "NPC.h"
 #include "PlayerCharacter.h"
+#include "Kismet/GameplayStatics.h"
 #define PRINT(text) if(GEngine) GEngine->AddOnScreenDebugMessage(-1, 5,FColor::Green, FString(text))
 
 
@@ -34,6 +36,19 @@ void ABossTrigger::OnEnterTrigger(AActor* OverlappedActor, AActor* OtherActor)
 		{
 			
 			OnBossTriggerActivated.Broadcast(PatrolPath);
+		}
+		if (auto* const AI = Cast<ANPC>(OtherActor))
+		{
+			PRINT("Sound triggered!");
+			UGameplayStatics::PlaySoundAtLocation(
+				this,
+				Sound,
+				GetActorLocation(),
+				FRotator::ZeroRotator,
+				1.f,
+				1.f,
+				0.f,
+				SoundAttenuation);
 		}
 		
 	}
