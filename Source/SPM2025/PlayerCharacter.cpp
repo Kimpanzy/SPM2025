@@ -145,7 +145,14 @@ void APlayerCharacter::RaycastHighligh()
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
 
-	bool bHit = GetWorld()->SweepSingleByChannel(Hit, Start, End,FQuat::Identity, ECC_Visibility,FCollisionShape::MakeSphere(10), QueryParams);
+	bool bHit = GetWorld()->SweepSingleByChannel(
+		Hit,
+		Start,
+		End,
+		FQuat::Identity,
+		ECC_Visibility,
+		FCollisionShape::MakeSphere(10),
+		QueryParams);
 
 	if (LastHighlightedActor && LastHighlightedActor != Hit.GetActor())
 	{

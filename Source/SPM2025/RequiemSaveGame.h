@@ -21,10 +21,10 @@ struct SPM2025_API FArtifactSaveData
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FVector Location;
+	FVector Location = FVector::ZeroVector;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FRotator Rotation;
+	FRotator Rotation = FRotator::ZeroRotator;
 };
 
 USTRUCT(Blueprintable)
@@ -42,7 +42,7 @@ struct SPM2025_API FRatCageSaveData
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	bool bRatIsInCage;
+	bool bRatIsInCage = false;
 };
 
 USTRUCT(Blueprintable)
@@ -51,10 +51,10 @@ struct SPM2025_API FRatSaveData
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FVector Location;
+	FVector Location = FVector::ZeroVector;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FRotator Rotation;
+	FRotator Rotation = FRotator::ZeroRotator;
 };
 
 USTRUCT(Blueprintable)
@@ -82,7 +82,7 @@ public:
 	TMap<FGuid, FBallPushPuzzleSaveData> PushableBalls;
 
 	UPROPERTY(VisibleAnywhere)
-	FNPCSaveData NPC;
+	FNPCSaveData NPC = FNPCSaveData();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TMap<FGuid, FArtifactSaveData> Artifacts;
@@ -94,16 +94,16 @@ public:
 	TMap<FGuid, FLeverPuzzleSaveData> LeverPuzzles;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FRitualCircleSaveData RitualCircle;
+	FRitualCircleSaveData RitualCircle = FRitualCircleSaveData();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FRatSaveData Rat;
+	FRatSaveData Rat = FRatSaveData();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FRatCageSaveData RatCage;
+	FRatCageSaveData RatCage = FRatCageSaveData();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FPlayerSaveData PlayerSaveData;
+	FPlayerSaveData PlayerSaveData = FPlayerSaveData();
 
 private:
 	friend void URequiemGameInstance::CreateSaveGame(const FString& SlotName, int UserIndex);

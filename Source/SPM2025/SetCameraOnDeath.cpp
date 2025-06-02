@@ -38,7 +38,7 @@ void ASetCameraOnDeath::OnDeath()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("OnDeath(): Missing PlayerController or NPC."));
+		UE_LOG(LogTemp, Warning, TEXT("Spelare finns inte"));
 	}
 }
 

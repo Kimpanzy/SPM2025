@@ -80,7 +80,7 @@ protected:
 	USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	USkeletalMeshComponent* ArmSkeleton;
-	
+
 	void InputMove(const FInputActionValue& Value);
 	void InputJump(const FInputActionValue& Value);
 	void InputLook(const FInputActionValue& Value);
@@ -99,10 +99,10 @@ struct SPM2025_API FPlayerSaveData
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FVector Position;
+	FVector Position = FVector::ZeroVector;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FRotator Rotation;
+	FRotator Rotation = FRotator::ZeroRotator;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<bool> TutorialBools;

@@ -61,8 +61,7 @@ void UGrabber::Release()
 	
 	FVector Location = GrabbedActor->GetActorLocation();
 	FVector Extent = FVector(50.f, 50.f, 50.f);
-
-	// Compute bounds using only static mesh components
+	
 	FBox StaticMeshBounds(ForceInit);
 	TArray<UStaticMeshComponent*> StaticMeshComponents;
 	GrabbedActor->GetComponents<UStaticMeshComponent>(StaticMeshComponents);
@@ -91,8 +90,7 @@ void UGrabber::Release()
 		TArray<AActor*>{ GetOwner(), GrabbedActor },
 		OverlappingComponents
 	);
-
-	// Visual debug
+	
 	DrawDebugBox(GetWorld(), Location, Extent, FColor::Yellow, false, 0.1f);
 
 	if (bIsOverlapping)
