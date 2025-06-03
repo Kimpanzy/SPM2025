@@ -57,6 +57,13 @@ public:
 	UPROPERTY(visibleAnywhere)
 	bool bIsDead = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Sensitivity = 1.0f;
+
+	UFUNCTION(BlueprintCallable)
+	void EnableCameraLag(bool value);
+
+	
 protected:
 	virtual void BeginPlay() override;
 

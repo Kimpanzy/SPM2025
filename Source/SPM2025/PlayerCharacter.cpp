@@ -42,6 +42,11 @@ APlayerCharacter::APlayerCharacter()
 	SetupStimulusSource();
 }
 
+void APlayerCharacter::EnableCameraLag(bool value)
+{
+	SpringArm->bEnableCameraRotationLag = value;
+}
+
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
@@ -68,6 +73,9 @@ void APlayerCharacter::BeginPlay()
 
 	URequiemGameInstance::Execute_RequestLoad(URequiemGameInstance::GetInstance(GetWorld()), this);
 	OnPlayerDeath.AddDynamic(this, &APlayerCharacter::HandlePlayerDeath);
+
+	Sensitivity = Cast<URequiemGameInstance>(GetGameInstance())->Sensitivity;
+	SpringArm->bEnableCameraRotationLag = Cast<URequiemGameInstance>(GetGameInstance())->bCameraLag;
 }
 
 // Called every frame
@@ -114,8 +122,8 @@ void APlayerCharacter::InputLook(const FInputActionValue& Value)
 	const FVector2D LookAxisValue = Value.Get<FVector2D>();
 	if (GetController())
 	{
-		AddControllerYawInput(LookAxisValue.X * 0.34f);
-		AddControllerPitchInput(LookAxisValue.Y * 0.34f);
+		AddControllerYawInput(LookAxisValue.X * ((Sensitivity/2.0f) + 0.25f));
+		AddControllerPitchInput(LookAxisValue.Y * ((Sensitivity/2.0f) + 0.25f));
 	}
 }
 

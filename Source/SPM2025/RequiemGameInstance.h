@@ -29,6 +29,16 @@ private:
 	void SaveGameToFile(bool Async);
 
 public:
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float Sensitivity = 0.5f;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	bool bCameraLag = true;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float MusicVolume = 1.0f;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	float SFXVolume = 1.0f;
+	
 	UPROPERTY(BlueprintAssignable)
 	FSavedGameDelegate SavedGame;
 
