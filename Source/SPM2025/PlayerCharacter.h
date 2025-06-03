@@ -37,7 +37,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ANPC_AIController* AIController;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool bIsHiding;
+	bool bIsHiding = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsShaking = false;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -63,6 +66,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void EnableCameraLag(bool value);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsToggling = false;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -98,6 +103,10 @@ private:
 	class UAIPerceptionStimuliSourceComponent* StimulusSource;
 
 	void SetupStimulusSource();
+
+	void ResetToggleBool();
+
+	FTimerHandle TimerHandle;
 };
 
 USTRUCT(Blueprintable)

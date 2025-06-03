@@ -63,11 +63,12 @@ void APlayerCharacter::BeginPlay()
 	//Attach flashlight till kameran
 	if (Flashlight)
 	{
-		Flashlight->AttachToComponent(ArmSkeleton, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_L");
+		Flashlight->AttachToComponent(ArmSkeleton, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "joint1");
 		//Flashlight->AttachToComponent(CameraComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		Flashlight->SetActorRelativeLocation(FVector(0.04, 0.06, 0.22));
-		Flashlight->SetActorRelativeRotation(FRotator(11, 270, 50));
-		Flashlight->SetActorRelativeScale3D(FVector(0.004));
+		Flashlight->SetActorRelativeScale3D(FVector(1.5));
+		Flashlight->SetActorRelativeLocation(FVector(13, -114, -6));
+		//Flashlight->SetActorRelativeRotation(FRotator(23, -138, -66));
+		Flashlight->SetActorRelativeRotation(FRotator(-138, -66, 23));
 	}
 	Super::BeginPlay();
 
@@ -137,10 +138,18 @@ void APlayerCharacter::SetupStimulusSource()
 	}
 }
 
+void APlayerCharacter::ResetToggleBool()
+{
+	bIsToggling = false;
+	Flashlight->ToggleFlashlight();
+}
+
 void APlayerCharacter::ToggleFlashlight(const FInputActionValue& Value)
 {
 	OnFlashlightToggled.Broadcast();
-	Flashlight->ToggleFlashlight();
+	
+	bIsToggling = true;
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &APlayerCharacter::ResetToggleBool, 0.2f, false);
 }
 
 void APlayerCharacter::RaycastHighligh()
