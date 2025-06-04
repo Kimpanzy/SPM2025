@@ -1,4 +1,4 @@
-// BTT_FindPlayerLocation.cpp
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BTT_FindPlayerLocation.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -9,7 +9,6 @@ UBTT_FindPlayerLocation::UBTT_FindPlayerLocation(FObjectInitializer const& Objec
     : UBTTask_BlackboardBase(ObjectInitializer)
 {
     NodeName = TEXT("Find Player Location");
-    // This task will use Blackboard keys manually inside ExecuteTask
 }
 
 EBTNodeResult::Type UBTT_FindPlayerLocation::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
@@ -17,10 +16,9 @@ EBTNodeResult::Type UBTT_FindPlayerLocation::ExecuteTask(UBehaviorTreeComponent&
     UBlackboardComponent* Blackboard = OwnerComp.GetBlackboardComponent();
     if (!Blackboard) return EBTNodeResult::Failed;
 
-    // Read the raw sound location key (make sure this matches your blackboard!)
-    FVector SoundLocation = Blackboard->GetValueAsVector("SoundLocation");
 
-    // Sanity check for a valid vector
+    FVector SoundLocation = Blackboard->GetValueAsVector("SoundLocation");
+    
     if (SoundLocation.IsNearlyZero())
     {
         UE_LOG(LogTemp, Warning, TEXT("SoundLocation invalid or zero."));
