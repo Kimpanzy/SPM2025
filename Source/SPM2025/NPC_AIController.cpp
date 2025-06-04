@@ -60,7 +60,7 @@ void ANPC_AIController::SetupPerceptionSystem()
 		SetPerceptionComponent(*CreateDefaultSubobject<UAIPerceptionComponent>(
 			"Hearing Component"));
 		
-		HearingConfig->HearingRange = 1000.0f;
+		HearingConfig->HearingRange = 250.0f;
 
 		HearingConfig->SetMaxAge(1.f);
 		HearingConfig->DetectionByAffiliation.bDetectEnemies = true;
