@@ -63,12 +63,12 @@ void APlayerCharacter::BeginPlay()
 	//Attach flashlight till kameran
 	if (Flashlight)
 	{
-		Flashlight->AttachToComponent(ArmSkeleton, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "joint1");
+		Flashlight->AttachToComponent(ArmSkeleton, FAttachmentTransformRules::SnapToTargetNotIncludingScale, "joint27");
 		//Flashlight->AttachToComponent(CameraComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		Flashlight->SetActorRelativeScale3D(FVector(1.5));
-		Flashlight->SetActorRelativeLocation(FVector(13, -114, -6));
+		Flashlight->SetActorRelativeScale3D(FVector(1.628327));
+		Flashlight->SetActorRelativeLocation(FVector(-40.052613, 56.590034, 105.996228));
 		//Flashlight->SetActorRelativeRotation(FRotator(23, -138, -66));
-		Flashlight->SetActorRelativeRotation(FRotator(-138, -66, 23));
+		Flashlight->SetActorRelativeRotation(FRotator(-77.376914, 116.266935, 51.394881));
 	}
 	Super::BeginPlay();
 
