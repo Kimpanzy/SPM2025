@@ -24,12 +24,15 @@ public:
 	bool bIsComplete = false;
 
 	UPROPERTY(BlueprintReadWrite)
+	class APushBall* Ball;
+	
+	UPROPERTY(BlueprintReadWrite)
 	UBoxComponent* TriggerBox = nullptr;
 
 	UPROPERTY(BlueprintAssignable)
 	FPushBallPuzzleCompleteDelegate OnCompleted;
 
-	void Complete();
+	void Complete(class APushBall* BallInGoal);
 
 private:
 	UFUNCTION()

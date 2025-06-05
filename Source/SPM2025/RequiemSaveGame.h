@@ -75,6 +75,18 @@ struct SPM2025_API FKeyDoorSaveData
 	bool bIsOpen;
 };
 
+USTRUCT(Blueprintable)
+struct SPM2025_API FPushableBallSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FVector Location = FVector::ZeroVector;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FRotator Rotation = FRotator::ZeroRotator;
+};
+
 UCLASS()
 class SPM2025_API URequiemSaveGame : public USaveGame
 {
@@ -88,7 +100,10 @@ public:
 	TMap<FGuid, FPushableBlockSaveData> PushableBlocks;
 
 	UPROPERTY(VisibleAnywhere)
-	TMap<FGuid, FBallPushPuzzleSaveData> PushableBalls;
+	TMap<FGuid, FBallPushPuzzleSaveData> PushableBallPuzzles;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TMap<FGuid, FPushableBallSaveData> PushableBalls;
 
 	UPROPERTY(VisibleAnywhere)
 	FNPCSaveData NPC = FNPCSaveData();

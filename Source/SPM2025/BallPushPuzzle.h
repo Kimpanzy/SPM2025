@@ -47,5 +47,5 @@ struct SPM2025_API FBallPushPuzzleSaveData
 {
 	GENERATED_BODY()
 
-	TBitArray<FDefaultBitArrayAllocator> Goals;
+	TArray<FGuid> Goals;
 };

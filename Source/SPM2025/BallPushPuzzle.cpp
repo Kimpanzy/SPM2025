@@ -3,7 +3,9 @@
 
 #include "MovableWall.h"
 #include "PushableBallGoal.h"
+#include "PushBall.h"
 #include "RequiemSaveGame.h"
+#include "Kismet/GameplayStatics.h"
 
 ABallPushPuzzle::ABallPushPuzzle()
 {
@@ -14,6 +16,8 @@ void ABallPushPuzzle::BeginPlay()
 {
 	Super::BeginPlay();
 
+	URequiemGameInstance::Execute_RequestLoad(URequiemGameInstance::GetInstance(GetWorld()), this);
+
 	for (APushableBallGoal* Goal : Goals)
 	{
 		if (Goal)
@@ -21,8 +25,6 @@ void ABallPushPuzzle::BeginPlay()
 			Goal->OnCompleted.AddDynamic(this, &ABallPushPuzzle::OnGoalComplete);
 		}
 	}
-
-	URequiemGameInstance::Execute_RequestLoad(URequiemGameInstance::GetInstance(GetWorld()), this);
 }
 
 void ABallPushPuzzle::OnGoalComplete(APushableBallGoal* Goal)
@@ -30,6 +32,7 @@ void ABallPushPuzzle::OnGoalComplete(APushableBallGoal* Goal)
 	if (Goals.Num() == ++CompletedGoals && MovableWall)
 	{
 		MovableWall->Move();
+		URequiemGameInstance::Execute_RequestSave(URequiemGameInstance::GetInstance(GetWorld()), true);
 	}
 }
 
@@ -40,24 +43,38 @@ void ABallPushPuzzle::SaveData_Implementation(URequiemSaveGame* SaveGameInstance
 
 	for (int i = 0; i < Goals.Num(); ++i)
 	{
-		SaveData.Goals.Add(Goals[i]->bIsComplete);
+		SaveData.Goals.Add(Goals[i]->Ball->ID);
 	}
 
-	SaveGameInstance->PushableBalls.Add(ID, SaveData);
+	SaveGameInstance->PushableBallPuzzles.Add(ID, SaveData);
 }
 
 void ABallPushPuzzle::LoadData_Implementation(URequiemSaveGame* SaveGameInstance)
 {
-	if (FBallPushPuzzleSaveData* SaveData = SaveGameInstance->PushableBalls.Find(ID))
+	if (FBallPushPuzzleSaveData* SaveData = SaveGameInstance->PushableBallPuzzles.Find(ID))
 	{
+		TArray<AActor*> BallActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), APushBall::StaticClass(), BallActors);
+
 		for (int i = 0; i < Goals.Num(); ++i)
 		{
-			if (i < SaveData->Goals.Num() && SaveData->Goals[i])
+			if (i < SaveData->Goals.Num() && SaveData->Goals[i].IsValid())
 			{
-				Goals[i]->Complete();
-				if (Goals.Num() == CompletedGoals)
+				for (int j = 0; j < BallActors.Num(); ++j)
 				{
-					URequiemGameInstance::Execute_RequestSave(URequiemGameInstance::GetInstance(GetWorld()), true);
+					if (
+						APushBall* BallInGoal = static_cast<APushBall*>(BallActors[j]);
+						BallInGoal->ID == SaveData->Goals[i]
+					)
+					{
+						Goals[i]->Complete(BallInGoal);
+						if (Goals.Num() == ++CompletedGoals && MovableWall)
+						{
+							MovableWall->Move();
+						}
+
+						break;
+					}
 				}
 			}
 		}
