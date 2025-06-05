@@ -16,6 +16,9 @@ public:
 	AMovableWall();
 
 private:
+	UPROPERTY(EditDefaultsOnly, meta=(AllowPrivateAccess=true))
+	USoundBase* MovingSound;
+	
 	UPROPERTY(EditAnywhere, meta=(AllowPrivateAccess=true), BlueprintReadWrite)
 	FVector MoveOffset = {0, 0, 300};
 

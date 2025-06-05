@@ -3,6 +3,8 @@
 
 #include "MovableWall.h"
 
+#include "Kismet/GameplayStatics.h"
+
 
 AMovableWall::AMovableWall()
 {
@@ -48,4 +50,5 @@ void AMovableWall::Move()
 	bHasMoved = true;
 	MovingFrom = GetActorLocation();
 	MovingTimeline.PlayFromStart();
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), MovingSound, GetActorLocation());
 }
