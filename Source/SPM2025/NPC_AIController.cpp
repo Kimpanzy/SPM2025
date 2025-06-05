@@ -90,7 +90,7 @@ void ANPC_AIController::OnTargetDetection(AActor* Actor, FAIStimulus Stimulus)
 	else if (Actor->ActorHasTag("Locker"))
 	{
 		FVector Location = Actor->GetActorLocation()+Actor->GetActorRightVector()*200+Actor->GetActorForwardVector()*20;
-		GetBlackboardComponent()->SetValueAsVector("SoundLocation", Location);
+		GetBlackboardComponent()->SetValueAsVector("SoundLocker", Location);
 		GetBlackboardComponent()->SetValueAsBool("IsHiding",true);
 		UE_LOG(LogTemp, Warning, TEXT("HÖR Locker"));
 	}else
