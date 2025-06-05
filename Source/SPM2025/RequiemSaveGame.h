@@ -66,6 +66,15 @@ struct SPM2025_API FLeverPuzzleSaveData
 	TArray<bool> PulledLevers;
 };
 
+USTRUCT(Blueprintable)
+struct SPM2025_API FKeyDoorSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bIsOpen;
+};
+
 UCLASS()
 class SPM2025_API URequiemSaveGame : public USaveGame
 {
@@ -104,6 +113,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FPlayerSaveData PlayerSaveData = FPlayerSaveData();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	TMap<FGuid, FKeyDoorSaveData> KeyDoors;
 
 private:
 	friend void URequiemGameInstance::CreateSaveGame(const FString& SlotName, int UserIndex);
