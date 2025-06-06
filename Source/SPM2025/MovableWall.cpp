@@ -25,6 +25,8 @@ void AMovableWall::BeginPlay()
 {
 	Super::BeginPlay();
 
+	MovingTimeline.SetPlayRate(1 / MovingSound->Duration);
+	
 	FOnTimelineFloat PushingUpdateEvent;
 	PushingUpdateEvent.BindDynamic(this, &AMovableWall::MovingUpdate);
 	MovingTimeline.AddInterpFloat(PushingCurve, PushingUpdateEvent);
