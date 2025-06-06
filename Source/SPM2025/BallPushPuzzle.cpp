@@ -43,7 +43,8 @@ void ABallPushPuzzle::SaveData_Implementation(URequiemSaveGame* SaveGameInstance
 
 	for (int i = 0; i < Goals.Num(); ++i)
 	{
-		SaveData.Goals.Add(Goals[i]->Ball->ID);
+		APushBall* BallInGoal = Goals[i]->Ball;
+		SaveData.Goals.Add(BallInGoal ? BallInGoal->ID : FGuid());
 	}
 
 	SaveGameInstance->PushableBallPuzzles.Add(ID, SaveData);
