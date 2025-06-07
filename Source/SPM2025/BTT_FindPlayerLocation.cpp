@@ -50,13 +50,12 @@ EBTNodeResult::Type UBTT_FindPlayerLocation::ExecuteTask(UBehaviorTreeComponent&
         }
     }
 
-    // Now set the *TargetLocation* key — separate from SoundLocation!
     Blackboard->SetValueAsVector("TargetLocation", FinalLocation);
 
     UE_LOG(LogTemp, Warning, TEXT("Set TargetLocation to: %s"), *FinalLocation.ToString());
 
     // Debug sphere
-    DrawDebugSphere(GetWorld(), FinalLocation, 50.f, 12, FColor::Green, false, 2.f);
+    //DrawDebugSphere(GetWorld(), FinalLocation, 50.f, 12, FColor::Green, false, 2.f);
 
     return EBTNodeResult::Succeeded;
 }

@@ -39,7 +39,6 @@ void ABossTrigger::OnEnterTrigger(AActor* OverlappedActor, AActor* OtherActor)
 		}
 		if (auto* const AI = Cast<ANPC>(OtherActor))
 		{
-			PRINT("Sound triggered!");
 			UGameplayStatics::PlaySoundAtLocation(
 				this,
 				Sound,
