@@ -39,6 +39,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	UCurveFloat* RotationCurve = nullptr;
 
+	UPROPERTY(BlueprintReadWrite)
+	UMeshComponent* MirrorMeshComponent = nullptr;
+
 	virtual void Tick(const float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable)

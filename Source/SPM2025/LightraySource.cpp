@@ -7,6 +7,7 @@
 #include "Mirror.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 #define TICK_RATE .2f
 
@@ -101,11 +102,30 @@ void ALightraySource::CastLightrayFrom(FVector Source, FVector Direction)
 
 			if (
 				const AActor* HitActor = PreviousHit = HitResult.GetActor();
-				HitActor->IsA(AMirror::StaticClass())
+				const AMirror* Mirror = Cast<AMirror>(HitActor)
 			)
 			{
-				Source = HitResult.ImpactPoint;
-				Direction = HitResult.ImpactNormal;
+				if (Mirror->MirrorMeshComponent)
+				{
+					if (
+						const FVector MirrorForwardVector = UKismetMathLibrary::GetForwardVector(
+							Mirror->MirrorMeshComponent->GetComponentRotation());
+						Direction.Dot(MirrorForwardVector) < .40)
+					{
+						Source = HitResult.ImpactPoint;
+						Direction = HitResult.ImpactNormal;
+					}
+					else
+					{
+						// Not bouncing on mirror front surface, exit early
+						break;
+					}
+				}
+				else
+				{
+					// Mirror missing mesh, exit early
+					break;
+				}
 			}
 			else
 			{
