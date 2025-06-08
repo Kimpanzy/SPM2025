@@ -87,6 +87,19 @@ struct SPM2025_API FPushableBallSaveData
 	FRotator Rotation = FRotator::ZeroRotator;
 };
 
+
+USTRUCT(Blueprintable)
+struct SPM2025_API FMirrorPuzzleSaveData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bHaveBeadsMoved;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bIsComplete;
+};
+
 UCLASS()
 class SPM2025_API URequiemSaveGame : public USaveGame
 {
@@ -104,6 +117,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TMap<FGuid, FPushableBallSaveData> PushableBalls;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FMirrorPuzzleSaveData MirrorPuzzle;
 
 	UPROPERTY(VisibleAnywhere)
 	FNPCSaveData NPC = FNPCSaveData();
