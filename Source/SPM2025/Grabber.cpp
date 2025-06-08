@@ -112,7 +112,9 @@ void UGrabber::Release()
 		{
 			Prim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			Prim->SetCollisionResponseToAllChannels(ECR_Block);
+			
 			Prim->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+			Prim->SetCollisionResponseToChannel(ECC_GameTraceChannel2, ECR_Overlap);
 			if (GrabbedActorHadPhysics)
 			{
 				Prim->SetSimulatePhysics(true);
@@ -141,6 +143,7 @@ void UGrabber::ReleaseAtPos(FVector Location, FRotator Rotation, bool bDisablePh
 			Prim->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 			Prim->SetCollisionResponseToAllChannels(ECR_Block);
 			Prim->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+			Prim->SetCollisionResponseToChannel(ECC_GameTraceChannel2, ECR_Overlap);
 			if (GrabbedActorHadPhysics && !bDisablePhysics)
 			{
 				Prim->SetSimulatePhysics(true);
