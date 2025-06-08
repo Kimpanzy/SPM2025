@@ -10,6 +10,8 @@
 class ISaveable;
 class URequiemSaveGame;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSavingGameDelegate, URequiemSaveGame*, SaveGameInstance);
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSavedGameDelegate, URequiemSaveGame*, SaveGameInstance, bool, Success);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLoadGameDelegate, URequiemSaveGame*, SaveGameInstance);
@@ -29,15 +31,18 @@ private:
 	void SaveGameToFile(bool Async);
 
 public:
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Sensitivity = 0.5f;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bCameraLag = true;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MusicVolume = 1.0f;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float SFXVolume = 1.0f;
+
+	UPROPERTY(BlueprintAssignable)
+	FSavingGameDelegate SavingGame;
 	
 	UPROPERTY(BlueprintAssignable)
 	FSavedGameDelegate SavedGame;

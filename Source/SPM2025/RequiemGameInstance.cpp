@@ -84,6 +84,8 @@ void URequiemGameInstance::RequestSave_Implementation(const bool Async)
 		CreateSaveGame();
 	}
 
+	SavingGame.Broadcast(SaveGameInstance);
+
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsWithInterface(GetWorld(), USaveable::StaticClass(), Actors);
 
